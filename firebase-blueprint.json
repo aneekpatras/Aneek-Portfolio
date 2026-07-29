@@ -1,0 +1,101 @@
+{
+  "entities": {
+    "Project": {
+      "title": "Project",
+      "description": "Dynamic portfolio projects with detailed ACF and WooCommerce case parameters",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier / slug of the project" },
+        "title": { "type": "string", "description": "Title of the project case" },
+        "slug": { "type": "string", "description": "URL-friendly string for routing" },
+        "subtitle": { "type": "string", "description": "Highlight caption of the project" },
+        "category": { "type": "string", "description": "The dynamic category label" },
+        "image": { "type": "string", "description": "Primary display case thumbnail image URL" },
+        "gallery": { "type": "array", "description": "Media carousel listing URLs" },
+        "tags": { "type": "array", "description": "List of technologies or keywords" },
+        "performanceMetric": { "type": "object", "description": "High value scoring parameters" },
+        "overview": { "type": "string", "description": "General summary description of the case" },
+        "challenge": { "type": "string", "description": "Problem identified during discovery" },
+        "solution": { "type": "string", "description": "Engineering formulation designed as answer" },
+        "results": { "type": "array", "description": "Array of bullet achievements verified post launch" },
+        "completionYear": { "type": "string", "description": "Year of work execution" },
+        "link": { "type": "string", "description": "Direct external URL link" },
+        "clientName": { "type": "string", "description": "Named client contact entity" },
+        "featured": { "type": "boolean", "description": "Featured flag toggle" },
+        "status": { "type": "string", "enum": ["published", "draft"], "description": "Publish status" },
+        "displayOrder": { "type": "integer", "description": "Pre-sorted rendering index" },
+        "seoTitle": { "type": "string", "description": "SEO Search result heading" },
+        "seoDescription": { "type": "string", "description": "SEO Schema description snippets" }
+      },
+      "required": ["id", "title", "category", "subtitle"]
+    },
+    "Experience": {
+      "title": "Experience",
+      "description": "Dynamic professional contracting and employment timeline events",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique experience block key" },
+        "company": { "type": "string", "description": "Name of the firm" },
+        "role": { "type": "string", "description": "Professional position designation" },
+        "period": { "type": "string", "description": "Textual duration of work" },
+        "highlights": { "type": "array", "description": "Bullet summaries of key achievements" },
+        "startDate": { "type": "string", "description": "ISO start date reference" },
+        "endDate": { "type": "string", "description": "ISO end date or blank" },
+        "currentPosition": { "type": "boolean", "description": "Current active position flag" },
+        "displayOrder": { "type": "integer", "description": "Manual ordering index" },
+        "description": { "type": "string", "description": "Detailed position summary" },
+        "logo": { "type": "string", "description": "Company image asset link" }
+      },
+      "required": ["id", "company", "role", "period", "highlights"]
+    },
+    "Skill": {
+      "title": "Skill",
+      "description": "Dynamic tech skills categorized by sector to drive the custom grid",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique key identifier" },
+        "category": { "type": "string", "enum": ["Frontend", "WordPress", "Backend", "SEO", "Performance", "Security", "Tools"], "description": "Categorized target domain" },
+        "title": { "type": "string", "description": "Group name or skill label" },
+        "skillsList": { "type": "array", "description": "Specific listings inside the skill categorization" },
+        "rating": { "type": "string", "description": "Subjective efficiency score or badge" },
+        "displayOrder": { "type": "integer", "description": "Visual ranking on page" },
+        "status": { "type": "string", "enum": ["published", "draft"], "description": "Visibility flag" }
+      },
+      "required": ["id", "category", "title", "skillsList"]
+    },
+    "Message": {
+      "title": "Message",
+      "description": "Form submissions and lead data managed from the dynamic intake screen",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique Firestore key ID" },
+        "name": { "type": "string", "description": "Contact author full name" },
+        "email": { "type": "string", "description": "Contact email coordinates" },
+        "message": { "type": "string", "description": "Lead and workspace message description" },
+        "date": { "type": "string", "description": "Standard timestamp text info" },
+        "time": { "type": "string", "description": "Specific time representation" },
+        "status": { "type": "string", "enum": ["unread", "read", "archived", "deleted"], "description": "Lead engagement status marker" },
+        "createdAt": { "type": "object", "description": "Standard server-side timestamp" }
+      },
+      "required": ["id", "name", "email", "message", "status"]
+    }
+  },
+  "firestore": {
+    "/projects/{projectId}": {
+      "schema": "Project",
+      "description": "Database collection mapping dynamic WooCommerce & custom design projects"
+    },
+    "/experience/{experienceId}": {
+      "schema": "Experience",
+      "description": "Timeline contracts listing for Aneek Patras"
+    },
+    "/skills/{skillId}": {
+      "schema": "Skill",
+      "description": "Skills taxonomies for the bento-style technical layout grid"
+    },
+    "/messages/{messageId}": {
+      "schema": "Message",
+      "description": "Lead management inbox logs capturing contact form entries safely"
+    }
+  }
+}

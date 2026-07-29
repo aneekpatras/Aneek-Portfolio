@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Nastaleeq+Urdu:wght@400;700&family=Noto+Naskh+Urdu:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Jameel Noori Nastaleeq";
+  src: url("https://cdn.jsdelivr.net/gh/r-pk/jameel-noori-nastaleeq@master/Jameel%20Noori%20Nastaleeq.ttf") format("truetype"),
+       url("https://mbilalm.com/download/jameel-noori-nastaleeq.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: "Inter", "Outfit", "Plus Jakarta Sans", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --color-brand-bg: #F5F5F3;
+  --color-brand-primary: #050505;
+  --color-brand-secondary: #5F5F5F;
+  --color-brand-accent: #FF6B00;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-brand-bg);
+    color: var(--color-brand-primary);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+}
+
+/* RTL Urdu Typography Optimization Filters */
+[dir="rtl"] {
+  font-family: "Jameel Noori Nastaleeq", "Noto Nastaleeq Urdu", "Noto Naskh Urdu", "Inter", "Outfit", sans-serif !important;
+}
+
+[dir="rtl"] p,
+[dir="rtl"] span,
+[dir="rtl"] li,
+[dir="rtl"] a,
+[dir="rtl"] div {
+  line-height: 1.8 !important;
+}
+
+[dir="rtl"] * {
+  letter-spacing: normal !important;
+  text-transform: none !important;
+}
+
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3,
+[dir="rtl"] h4,
+[dir="rtl"] h5,
+[dir="rtl"] h6,
+[dir="rtl"] strong,
+[dir="rtl"] b,
+[dir="rtl"] .font-black,
+[dir="rtl"] .font-extrabold,
+[dir="rtl"] .font-bold {
+  font-weight: 600 !important;
+  line-height: 1.6 !important;
+}
+
+/* Custom styles for luxury grain / textures, and smooth navigation */
+.grain-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='00%20200%20200'%20xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter%20id='noiseFilter'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.65'%20numOctaves='3'%20stitchTiles='stitch'/%3E%3C/filter%3E%3Crect%20width='100%25'%20height='100%25'%20filter='url(%23noiseFilter)'%20opacity='0.04'/%3E%3C/svg%3E");
+}
+
+/* Glass card styling */
+.glass-card {
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Accent text gradient */
+.accent-gradient {
+  background: radial-gradient(circle at top left, #FF6B00, #ff8c00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F5F5F3;
+}
+::-webkit-scrollbar-thumb {
+  background: #D9D9D7;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #FF6B00;
+}
+
+/* Hide scrollbar (used by the mobile horizontal Work scroller) */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom cursor */
+.custom-cursor-glow {
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 107, 0, 0.15) 0%, transparent 70%);
+}
+
+/* Smooth scrolling style (client scroll fallback is nice) */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom ambient glows */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-20px) scale(1.05);
+  }
+}
+
+@keyframes float-reverse {
+  0%, 100% {
+    transform: translateY(0px) scale(1.05);
+  }
+  50% {
+    transform: translateY(15px) scale(0.95);
+  }
+}
+
+.animate-float-1 {
+  animation: float 12s ease-in-out infinite;
+}
+
+.animate-float-2 {
+  animation: float-reverse 16s ease-in-out infinite;
+}
+
+.text-reveal-mask {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+}
