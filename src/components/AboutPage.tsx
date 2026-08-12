@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { Link } from "react-router-dom";
 import {
   Code2,
   Ban,
@@ -218,13 +219,13 @@ export default function AboutPage() {
                 automated backend synchronizations inside ACF Pro.
               </p>
             </div>
-            <a
-              href="#/contact"
+            <Link
+              to="/contact"
               className="group relative z-10 shrink-0 inline-flex items-center gap-2.5 rounded-full bg-[#FF6B00] px-6 py-3.5 text-xs font-bold uppercase tracking-widest text-white transition-all duration-300 hover:bg-white hover:text-[#050505]"
             >
               Request Custom Work
               <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </a>
+            </Link>
           </motion.div>
         </div>
       </section>
@@ -245,13 +246,13 @@ export default function AboutPage() {
               Great engineering is only half the job. The other half is a partnership built on
               clarity, business outcomes, and a site you can rely on long after launch.
             </p>
-            <a
-              href="#/contact"
+            <Link
+              to="/contact"
               className="group mt-6 inline-flex items-center gap-2.5 rounded-full bg-[#050505] px-6 py-3 text-xs font-bold uppercase tracking-widest text-white transition-all duration-300 hover:bg-[#FF6B00]"
             >
               Let's Work Together
               <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </a>
+            </Link>
           </motion.div>
 
           <div className="lg:col-span-7 flex flex-col divide-y divide-[#050505]/8">

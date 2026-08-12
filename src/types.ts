@@ -1,5 +1,5 @@
 import victoriasCoffeeImage from "./assets/images/regenerated_image_1780406713775.png";
-import technoorUaeImage from "./assets/images/regenerated_image_1780406745422.png";
+import technoorUaeImage from "./assets/images/technoor.png";
 
 /**
  * TypeScript definitions and static portfolio data strictly sourced from Aneek Patras's CV.

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "motion/react";
+import { Link } from "react-router-dom";
 import { 
   Layout, 
   Code2, 
@@ -210,13 +211,13 @@ export default function SkillsGrid({ lang }: SkillsGridProps) {
               </p>
             </div>
 
-            <a
-              href="#/contact"
+            <Link
+              to="/contact"
               className="relative z-10 font-sans text-xs font-bold uppercase tracking-widest text-[#FF6B00] group-hover:text-white transition-colors duration-300 mt-8 flex items-center gap-2"
             >
               {lang === "ur" ? "رابطہ کریں اور پراجیکٹ کا آغاز کریں" : "Request Custom Work"} 
               <ArrowRight className={`w-3.5 h-3.5 group-hover:translate-x-1 transition-transform ${lang === "ur" ? "rotate-180 group-hover:-translate-x-1" : ""}`} />
-            </a>
+            </Link>
           </motion.div>
 
         </div>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { Link } from "react-router-dom";
 import { Plus, ArrowUpRight } from "lucide-react";
 
 interface FAQProps {
@@ -67,13 +68,13 @@ export default function FAQ({ lang: _lang = "en" }: FAQProps) {
               Common questions
             </h2>
           </div>
-          <a
-            href="#/contact"
+          <Link
+            to="/contact"
             className="group inline-flex items-center gap-1.5 font-sans text-sm font-semibold text-[#5F5F5F] underline underline-offset-4 decoration-[#050505]/20 transition-colors hover:text-[#FF6B00] hover:decoration-[#FF6B00]"
           >
             Still have questions?
             <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </a>
+          </Link>
         </motion.div>
 
         {/* Accordion */}

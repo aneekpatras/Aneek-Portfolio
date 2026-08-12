@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
 interface ApproachProps {
@@ -43,13 +44,13 @@ export default function Approach({ lang: _lang = "en" }: ApproachProps) {
           </p>
 
           {/* Action button → dedicated Skills page */}
-          <a
-            href="#/about"
+          <Link
+            to="/about"
             className="group mt-8 inline-flex items-center gap-2.5 self-start rounded-full bg-[#050505] px-6 py-3 text-xs font-bold uppercase tracking-widest text-white transition-all duration-300 hover:bg-[#FF6B00]"
           >
             Explore My Skills
             <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00] transition-colors duration-300 group-hover:bg-white" />
-          </a>
+          </Link>
         </div>
 
         {/* What to Expect */}

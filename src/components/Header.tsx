@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import { TRANSLATIONS } from "../utils";
@@ -11,6 +12,8 @@ export default function Header({ activeSection }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [time, setTime] = useState(new Date());
+  const navigate = useNavigate();
+  const location = useLocation();
   const t = TRANSLATIONS["en"];
 
   useEffect(() => {
@@ -29,34 +32,36 @@ export default function Header({ activeSection }: HeaderProps) {
   }, []);
 
   const navItems = [
-    { name: t.navAbout, href: "#/about" },
-    { name: "Work", href: "#/work" },
-    { name: t.navExperience, href: "#/experience" },
-    { name: t.navContact, href: "#/contact" },
+    { name: t.navAbout, href: "/about", path: "/about" },
+    { name: "Work", href: "/work", path: "/work" },
+    { name: t.navExperience, href: "/experience", path: "/experience" },
+    { name: t.navContact, href: "/contact", path: "/contact" },
   ];
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    // Route links (e.g. #/work) navigate to another view — let the hash change
-    // through so main.tsx's router picks it up instead of trying to scroll.
-    if (href.startsWith("#/")) {
-      setIsOpen(false);
-      return;
-    }
-    e.preventDefault();
-    setIsOpen(false);
-    const targetElement = document.querySelector(href);
-    if (targetElement) {
-      const topOffset = targetElement.getBoundingClientRect().top + window.scrollY - 100;
-      window.scrollTo({
-        top: topOffset,
-        behavior: "smooth"
-      });
+  const handleLogoClick = () => {
+    if (location.pathname === "/") {
+      // Already on home, scroll to top
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      // Target section isn't on the current view (e.g. logo → #hero from a
-      // sub-page) → route back to the homepage.
-      window.location.hash = "";
-      window.scrollTo({ top: 0 });
+      // Navigate to home
+      navigate("/");
     }
+    setIsOpen(false);
+  };
+
+  const handleSectionClick = (sectionId: string) => {
+    if (location.pathname === "/") {
+      // On home page, scroll to section
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const topOffset = element.getBoundingClientRect().top + window.scrollY - 100;
+        window.scrollTo({
+          top: topOffset,
+          behavior: "smooth"
+        });
+      }
+    }
+    setIsOpen(false);
   };
 
   return (
@@ -74,26 +79,25 @@ export default function Header({ activeSection }: HeaderProps) {
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Logo / Personal Brand */}
-          <a 
-            href="#hero" 
-            onClick={(e) => handleNavClick(e, "#hero")}
-            className="group flex items-center gap-3 font-sans"
+          <button
+            onClick={handleLogoClick}
+            className="group flex items-center gap-3 font-sans hover:opacity-75 transition-opacity"
           >
             <div className="w-8 h-8 bg-[#050505] rounded-full flex items-center justify-center transition-transform duration-500 group-hover:scale-105">
               <div className="w-2.5 h-2.5 bg-[#FF6B00] rounded-full"></div>
             </div>
             <span className="text-xl font-extrabold tracking-tighter text-[#050505]">ANEEK</span>
-          </a>
+          </button>
 
           {/* Desktop Nav Items */}
           <nav className="hidden md:flex items-center gap-4 lg:gap-8">
             {navItems.map((item) => {
-              const isActive = activeSection === item.href.substring(1);
+              const isActive = location.pathname === item.path;
               return (
-                <a
+                <Link
                   key={item.name}
-                  href={item.href}
-                  onClick={(e) => handleNavClick(e, item.href)}
+                  to={item.href}
+                  onClick={() => handleSectionClick(item.path.substring(1))}
                   className={`relative font-sans text-sm font-medium tracking-wide transition-colors duration-300 py-1 ${
                     isActive 
                       ? "text-[#FF6B00]" 
@@ -108,7 +112,7 @@ export default function Header({ activeSection }: HeaderProps) {
                       transition={{ type: "spring", stiffness: 380, damping: 30 }}
                     />
                   )}
-                </a>
+                </Link>
               );
             })}
           </nav>
@@ -131,16 +135,15 @@ export default function Header({ activeSection }: HeaderProps) {
               </span>
             </div>
 
-            <a
-              href="#/contact"
-              onClick={(e) => handleNavClick(e, "#/contact")}
+            <Link
+              to="/contact"
               className="relative overflow-hidden group rounded-full border border-[#050505]/15 px-5 py-2.5 text-xs font-semibold tracking-wider text-[#050505] transition-all duration-500 hover:border-[#FF6B00] hover:text-[#050505]"
             >
               <div className="absolute inset-0 w-0 bg-[#FF6B00]/5 transition-all duration-300 group-hover:w-full" />
               <span className="relative flex items-center gap-1.5">
                 {t.letsTalk} <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300" />
               </span>
-            </a>
+            </Link>
           </div>
 
           {/* Hamburger Menu Mobile Button */}
@@ -183,21 +186,26 @@ export default function Header({ activeSection }: HeaderProps) {
           >
             <nav className="flex flex-col gap-6">
               {navItems.map((item, index) => {
-                const isActive = activeSection === item.href.substring(1);
+                const isActive = location.pathname === item.path;
                 return (
-                  <motion.a
+                  <motion.div
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
                     key={item.name}
-                    href={item.href}
-                    onClick={(e) => handleNavClick(e, item.href)}
-                    className={`font-sans text-xl font-bold tracking-tight transition-all ${
-                      isActive ? "text-[#FF6B00]" : "text-[#5F5F5F]"
-                    }`}
                   >
-                    {item.name}
-                  </motion.a>
+                    <Link
+                      to={item.href}
+                      onClick={() => {
+                        handleSectionClick(item.path.substring(1));
+                      }}
+                      className={`font-sans text-xl font-bold tracking-tight transition-all ${
+                        isActive ? "text-[#FF6B00]" : "text-[#5F5F5F]"
+                      }`}
+                    >
+                      {item.name}
+                    </Link>
+                  </motion.div>
                 );
               })}
             </nav>

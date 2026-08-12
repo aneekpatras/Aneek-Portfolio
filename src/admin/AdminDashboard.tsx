@@ -1,4 +1,5 @@
 import { useRef, useState, type ChangeEvent, type ReactNode } from "react";
+import { Link } from "react-router-dom";
 import {
   Plus,
   Pencil,
@@ -108,12 +109,12 @@ export default function AdminDashboard() {
           </div>
 
           <div className="flex items-center gap-2">
-            <a
-              href="#/"
+            <Link
+              to="/"
               className="inline-flex items-center gap-1.5 rounded-full border border-[#050505]/12 bg-white px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#050505] transition-colors hover:border-[#FF6B00] hover:text-[#FF6B00]"
             >
               <Eye className="h-3.5 w-3.5" /> View Site
-            </a>
+            </Link>
             <button
               onClick={() => setCreating(true)}
               className="inline-flex items-center gap-1.5 rounded-full bg-[#FF6B00] px-4 py-2 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-[#050505]"

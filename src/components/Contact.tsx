@@ -99,7 +99,7 @@ export default function Contact({ lang, hideHeader = false }: ContactProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 md:gap-24 items-start">
           
           {/* Left Column: Freelance details */}
-          <div className="lg:col-span-5 flex flex-col justify-between h-full text-start">
+          <div className="lg:col-span-5 flex flex-col gap-8 lg:gap-10 text-start">
             {!hideHeader && (
             <div>
               <div className="flex items-center gap-2 mb-6">
@@ -117,7 +117,7 @@ export default function Contact({ lang, hideHeader = false }: ContactProps) {
                 {t.contactSub}
               </p>
 
-              <p className="font-sans text-sm md:text-base text-[#5F5F5F] leading-relaxed mb-12">
+              <p className="font-sans text-sm md:text-base text-[#5F5F5F] leading-relaxed">
                 {lang === "ur"
                   ? "براہ کرم فارم پُر کریں تاکہ ہم فوری طور پر ای میل کے ذریعے پروجیکٹ شروع سکیں اور اپنی ضرورت کے سنگ میل طے کر سکیں۔"
                   : "Provide your core details, name, and project message, and I'll establish direct lines with you right away."}
@@ -126,7 +126,7 @@ export default function Contact({ lang, hideHeader = false }: ContactProps) {
             )}
 
             {/* Support Metrics assurances */}
-            <div className="flex flex-col gap-6 mb-12">
+            <div className="flex flex-col gap-4">
               <div className="flex gap-3.5 items-center">
                 <div className="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center text-xs font-bold shrink-0">
                   ✓

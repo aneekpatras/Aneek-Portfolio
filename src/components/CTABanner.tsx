@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { Link } from "react-router-dom";
 
 /**
  * Homepage closing CTA — a wide, grainy dark glass banner that sits between
@@ -34,13 +35,13 @@ export default function CTABanner() {
               <span className="block">with Aneek</span>
             </h2>
 
-            <a
-              href="#/contact"
+            <Link
+              to="/contact"
               className="group inline-flex items-center gap-3 rounded-full bg-[#F5F5F3] px-8 py-4 text-sm font-bold tracking-tight text-[#050505] transition-all duration-300 hover:bg-[#FF6B00] hover:text-white"
             >
               Contact Us
               <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00] transition-colors duration-300 group-hover:bg-white" />
-            </a>
+            </Link>
           </div>
         </motion.div>
       </div>

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
+import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Project } from "../types";
 import { useProjects } from "../lib/projectStore";
@@ -171,13 +172,13 @@ export default function Projects({ lang: _lang = "en" }: ProjectsProps) {
               {t.projectsSub}
             </p>
           </div>
-          <a
-            href="#/work"
+          <Link
+            to="/work"
             className="group shrink-0 inline-flex items-center gap-2.5 rounded-full bg-[#050505] px-7 py-4 text-xs font-bold uppercase tracking-widest text-white transition-all duration-300 hover:bg-[#FF6B00] shadow-sm"
           >
             View All Work
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-          </a>
+          </Link>
         </div>
       </div>
     </div>
