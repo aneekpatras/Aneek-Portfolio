@@ -97,7 +97,7 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      <div className="relative min-h-screen bg-[#F5F5F3] overflow-x-hidden selection:bg-[#FF6B00] selection:text-white">
+      <div className="relative min-h-screen bg-[#F5F5F3] overflow-x-clip selection:bg-[#FF6B00] selection:text-white">
         {/* Subtle Horizontal Scroll Progress Bar */}
         <div
           id="scroll-progress-bar"
