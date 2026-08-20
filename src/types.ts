@@ -51,8 +51,9 @@ export interface Experience {
   company: string;
   role: string;
   period: string; // Dynamic text e.g., "Dec 2025 – Present"
+  employmentType?: string; // e.g., "Direct Contractor", "Part-Time Contractor"
   highlights: string[];
-  
+
   // New CMS requested fields
   startDate?: string;
   endDate?: string;
@@ -80,8 +81,8 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     title: "Oz Developers",
     category: "Custom WordPress & Advanced Directory",
     subtitle: "A highly interactive, fast corporate network index featuring directory management tools and dynamic lookups.",
-    image: "/src/assets/images/ozdevelopers.png",
-    hoverImage: "/src/assets/images/ozdevelopershower.png",
+    image: "/images/ozdevelopers.png",
+    hoverImage: "/images/ozdevelopershower.png",
     tags: ["WordPress", "Custom Post Types", "ACF Pro", "WP Rocket", "SEO Strategy", "Wp Page Biulder"],
     performanceMetric: {
       label: "Google PageSpeed Mobile",
@@ -103,7 +104,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     title: "Get Me Tutor",
     category: "Web Application / EdTech",
     subtitle: "An online tutoring platform connecting students with qualified tutors, featuring dynamic routing and smooth UI interactions.",
-    image: "/src/assets/images/getmetutor.png",
+    image: "/images/getmetutor.png",
     tags: ["React", "React Router", "Tailwind CSS", "Framer Motion"],
     performanceMetric: {
       label: "Performance & Server",
@@ -121,15 +122,15 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     completionYear: "2026",
     link: "https://getmetutor.online",
     displayOrder: 1,
-    hoverImage: "/src/assets/images/getmetutorhower.png"
+    hoverImage: "/images/getmetutorhower.png"
   },
   {
     id: "technoor-uae",
     title: "Technoor UAE",
     category: "WooCommerce & Full Security Hardening",
     subtitle: "High-tier electronics retail store styled for responsive layout and hardened with full firewall parameters.",
-    image: "/src/assets/images/technoor..png",
-    hoverImage: "/src/assets/images/technoor.png",
+    image: "/images/technoor-shop.png",
+    hoverImage: "/images/technoor.png",
     tags: ["WordPress", "WooCommerce", "Elementor", "Security Hardening", "Wordfence"],
     performanceMetric: {
       label: "Security Incident Rate",
@@ -152,7 +153,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     title: "OZ Techworks",
     category: "Custom WordPress / E-Waste Website",
     subtitle: "A custom-themed WordPress website built for a E-Waste Management, integrated with Tailwind CSS, dynamic scroll animations, and optimized backend performance.",
-    image: "/src/assets/images/gogreen.png",
+    image: "/images/gogreen.png",
     tags: ["WordPress", "Custom Theme", "PHP"],
     performanceMetric: {
       label: "Infrastructure & Speed",
@@ -173,15 +174,15 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     status: "published",
     featured: false,
     displayOrder: 3,
-    hoverImage: "/src/assets/images/gogreenhower.png"
+    hoverImage: "/images/gogreenhower.png"
   },
   {
     id: "padel-hub",
     title: "Padel Hub",
     category: "Sports & Entertainment / Booking Website",
     subtitle: "A modern sports club website featuring court booking integrations, event management, cafe details, dynamic sliders, and location mapping.",
-    image: "/src/assets/images/Padelhub.png",
-    hoverImage: "/src/assets/images/Padelhubhower.png",
+    image: "/images/padelhub.png",
+    hoverImage: "/images/padelhubhower.png",
     tags: ["WordPress", "Custom CPT", "Yoast SEO", "Booking Integration", "PHP (8.2)"],
     performanceMetric: {
       label: "nfrastructure & Speed",
@@ -202,7 +203,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     title: "Lahore Sky",
     category: "Elementor Real Estate Showcase",
     subtitle: "Premium real estate project portal with interactively automated layout hierarchies and optimized visual banners.",
-    image: "/src/assets/images/lahoresky.png",
+    image: "/images/lahoresky.png",
     tags: ["WordPress", "Elementor Pro", "SEO Optimization", "Yoast Pro", "Schema Markup"],
     performanceMetric: {
       label: "PageSpeed Index Rating",
@@ -218,14 +219,14 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     completionYear: "2025",
     link: "https://lahoresky.com.pk",
     displayOrder: 5,
-    hoverImage: "/src/assets/images/lahoreskyhower.png"
+    hoverImage: "/images/lahoreskyhower.png"
   },
   {
     id: "victorias-coffee",
     title: "The Victorias Coffee",
     category: "WooCommerce & Custom Theme Engineering",
     subtitle: "Highly-optimized eCommerce rebuild featuring bespoke child theme layouts and ACF product integrations.",
-    image: "/src/assets/images/regenerated_image_1780406713775.png",
+    image: "/images/regenerated_image_1780406713775.png",
     tags: ["WooCommerce", "ACF", "Custom CPT", "WP Rocket", "Yoast SEO"],
     hoverImage: "https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&q=80&w=1200",
     performanceMetric: {
@@ -249,7 +250,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     title: "Wise Wheels Blog",
     category: "Automotive Blog / Content Portal",
     subtitle: "A custom-tailored automotive blog and news platform for Wise Wheels, engineered with custom PHP logic, GeneratePress, and advanced SEO optimization for high-traffic content delivery.",
-    image: "/src/assets/images/ww-blogs.png",
+    image: "/images/ww-blogs.png",
     tags: ["WordPress", "Custom PHP (8.3)", "React", "Bootstrap", "RankMath SEO"],
     performanceMetric: {
       label: "Speed & Optimization",
@@ -264,14 +265,14 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     completionYear: "2026",
     link: "https://wisewheels.com.pk/blogs/",
     displayOrder: 7,
-    hoverImage: "/src/assets/images/ww-blogshower.png"
+    hoverImage: "/images/ww-blogshower.png"
   },
   {
     id: "kssmartbeauty",
     title: "Looks Smart Beauty Salon",
     category: "Salon Booking & Management App",
     subtitle: "A luxury salon web application featuring seamless appointment booking, client follow-ups, and a comprehensive admin dashboard to track revenue, leads, and operational schedules.",
-    image: "/src/assets/images/lsbs.png",
+    image: "/images/lsbs.png",
     tags: ["React", "React Router 6", "Tailwind CSS", "Radix UI", "shadcn/ui", "Base44"],
     performanceMetric: {
       label: "Feature Set",
@@ -289,7 +290,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     completionYear: "2026",
     link: "https://lookssmartbeautysalon.base44.app/",
     displayOrder: 8,
-    hoverImage: "/src/assets/images/lsbshower.png",
+    hoverImage: "/images/lsbshower.png",
     featured: true
   }
 ];
@@ -352,12 +353,26 @@ export const EXPERIENCE_TIMELINE: Experience[] = [
     company: "Oz Group",
     role: "WordPress Developer",
     period: "Dec 2025 – Present",
+    employmentType: "Direct Contractor",
     highlights: [
-      "Custom WordPress Development",
-      "ACF & CPT Architecture",
-      "Core Web Vitals Optimization",
-      "WooCommerce Enhancements",
-      "Managed Multiple Client Websites"
+      "Custom Theme & Core Web Vitals (45 → 85+ PageSpeed)",
+      "PHP/MySQL Database & Performance Optimization",
+      "Custom Gutenberg Blocks & REST API Integrations",
+      "Security Hardening (Wordfence) & Hostinger Server Maintenance",
+      "Internal Team Onboarding & Workflow Standardization"
+    ]
+  },
+  {
+    id: "exp-ebakey",
+    company: "Ebakey (Germany)",
+    role: "E-Commerce Developer & Intern",
+    period: "May 2025 – Jul 2025",
+    employmentType: "Part-Time Contractor",
+    highlights: [
+      "Shopify & WordPress Store Operations",
+      "Cross-Platform Product & Catalog Management",
+      "International E-Commerce Workflow Optimization",
+      "Live Store Maintenance & UI Tweaks"
     ]
   },
   {
@@ -365,12 +380,12 @@ export const EXPERIENCE_TIMELINE: Experience[] = [
     company: "Yahwehroi IT Company",
     role: "WordPress Developer",
     period: "Sep 2024 – Jun 2025",
+    employmentType: "Direct Contractor",
     highlights: [
-      "Responsive Website Development",
-      "WooCommerce Projects",
-      "SEO Optimization",
-      "Website Migration",
-      "Performance Improvements"
+      "WooCommerce & Payment Gateway Integrations",
+      "Staging-Based Site Migrations (70% Downtime Reduction)",
+      "On-Page SEO, Schema Markup & Search Console Setup",
+      "Plugin Architecture Audits & Performance Tuning"
     ]
   }
 ];

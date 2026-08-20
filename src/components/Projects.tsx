@@ -79,20 +79,23 @@ export default function Projects({ lang: _lang = "en" }: ProjectsProps) {
   );
 
   const cards = featured.map((project, idx) => (
-    <div key={project.id} className="flex-none w-[85vw] sm:w-[420px] lg:w-[440px]">
+    <div key={project.id} className="flex-none w-[85vw] md:w-[50vw] lg:w-[40vw] h-[480px] md:h-[520px] max-h-[60vh]">
       <ProjectCard project={project} index={idx} onSelect={setSelectedProject} />
     </div>
   ));
 
   return (
-    <section id="projects" className="relative bg-white border-t border-[#050505]/5">
+    <section
+      id="projects"
+      className="relative z-10 w-full bg-white border-t border-[#050505]/5"
+    >
       <div ref={containerRef} className="relative h-[300vh]">
-        <div className="sticky top-0 h-screen overflow-hidden flex flex-col justify-center gap-6">
+        <div className="sticky top-0 h-screen overflow-hidden flex flex-col justify-center gap-6 py-12 md:py-16">
           {header}
           <motion.div
             ref={trackRef}
             style={{ x }}
-            className="flex gap-6 pl-6 md:pl-12 lg:pl-24 pr-[10vw] will-change-transform"
+            className="flex items-center gap-8 lg:gap-12 pl-6 md:pl-12 lg:pl-24 pr-[10vw] will-change-transform"
           >
             {cards}
           </motion.div>

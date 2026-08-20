@@ -32,6 +32,7 @@ export default function Header({ activeSection }: HeaderProps) {
   }, []);
 
   const navItems = [
+    { name: "Home", href: "/", path: "/" },
     { name: t.navAbout, href: "/about", path: "/about" },
     { name: "Work", href: "/work", path: "/work" },
     { name: t.navExperience, href: "/experience", path: "/experience" },
@@ -97,7 +98,7 @@ export default function Header({ activeSection }: HeaderProps) {
                 <Link
                   key={item.name}
                   to={item.href}
-                  onClick={() => handleSectionClick(item.path.substring(1))}
+                  onClick={() => (item.path === "/" ? handleLogoClick() : handleSectionClick(item.path.substring(1)))}
                   className={`relative font-sans text-sm font-medium tracking-wide transition-colors duration-300 py-1 ${
                     isActive 
                       ? "text-[#FF6B00]" 
@@ -197,7 +198,11 @@ export default function Header({ activeSection }: HeaderProps) {
                     <Link
                       to={item.href}
                       onClick={() => {
-                        handleSectionClick(item.path.substring(1));
+                        if (item.path === "/") {
+                          handleLogoClick();
+                        } else {
+                          handleSectionClick(item.path.substring(1));
+                        }
                       }}
                       className={`font-sans text-xl font-bold tracking-tight transition-all ${
                         isActive ? "text-[#FF6B00]" : "text-[#5F5F5F]"

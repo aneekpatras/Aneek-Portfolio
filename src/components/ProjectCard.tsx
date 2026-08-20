@@ -53,14 +53,16 @@ export default function ProjectCard({ project, onSelect, index = 0 }: ProjectCar
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.6, delay: (index % 4) * 0.06, ease: [0.16, 1, 0.3, 1] }}
       onClick={() => onSelect(project)}
-      className="group w-full cursor-pointer"
+      className="group w-full h-full flex flex-col cursor-pointer"
     >
-      {/* Image trigger (cursor bubble + hover swap live here) */}
+      {/* Image trigger (cursor bubble + hover swap live here) — flexes to fill
+          whatever height the card's parent gives it, so object-cover scales
+          the image proportionally without ever overflowing the card. */}
       <div
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         onMouseMove={handleMove}
-        className="relative overflow-hidden rounded-3xl bg-[#F5F5F3] border border-[#050505]/5 aspect-[44/31] shadow-xs transition-shadow duration-500 group-hover:shadow-xl md:cursor-none"
+        className="relative overflow-hidden rounded-3xl bg-[#F5F5F3] border border-[#050505]/5 flex-1 min-h-0 shadow-xs transition-shadow duration-500 group-hover:shadow-xl md:cursor-none"
       >
         {/* Primary image */}
         <img
@@ -114,7 +116,7 @@ export default function ProjectCard({ project, onSelect, index = 0 }: ProjectCar
       </div>
 
       {/* Subtle title */}
-      <h3 className="mt-3 px-1 font-sans text-sm md:text-base font-semibold tracking-tight text-[#050505] transition-colors duration-300 group-hover:text-[#FF6B00]">
+      <h3 className="shrink-0 mt-3 px-1 font-sans text-sm md:text-base font-semibold tracking-tight text-[#050505] transition-colors duration-300 group-hover:text-[#FF6B00]">
         {project.title}
       </h3>
     </motion.article>

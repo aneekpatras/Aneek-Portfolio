@@ -15,7 +15,7 @@ export default function Approach({ lang: _lang = "en" }: ApproachProps) {
   return (
     <section
       id="approach"
-      className="relative py-16 md:py-20 px-6 md:px-12 lg:px-24 bg-[#F5F5F3] border-t border-[#050505]/5"
+      className="relative w-full mt-16 md:mt-24 py-16 md:py-20 px-6 md:px-12 lg:px-24 bg-[#F5F5F3] border-t border-[#050505]/5"
     >
       <motion.div
         initial={{ opacity: 0, y: 30 }}

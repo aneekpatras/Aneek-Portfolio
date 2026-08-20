@@ -8,7 +8,6 @@ import {
   Zap,
   ShieldCheck,
   Network,
-  Sparkles,
   Handshake,
   TrendingUp,
   Repeat,
@@ -39,29 +38,29 @@ const PILLARS = [
   {
     id: "P01",
     icon: Boxes,
-    title: "Custom WordPress Engineering & Theme Architecture",
-    desc: "Hand-built themes and data models designed exactly to spec — never off-the-shelf templates.",
+    title: "Custom Themes",
+    desc: "Hand-built WordPress theme architecture and custom ACF data models built to spec.",
     tags: ["PHP", "MySQL", "ACF Pro", "Custom Post Types", "Child Themes"],
   },
   {
     id: "P02",
     icon: Zap,
-    title: "High-Performance Frontend Development",
-    desc: "Lightning-fast, pixel-precise UI with modern JavaScript/React — plus Gutenberg & Elementor tuned without the bloat.",
+    title: "Modern Frontend",
+    desc: "Sub-second loading interfaces with React, Gutenberg, and bloat-free Elementor layouts.",
     tags: ["React", "JavaScript", "Tailwind CSS", "Gutenberg", "Elementor"],
   },
   {
     id: "P03",
     icon: ShieldCheck,
-    title: "Core Web Vitals, Speed & Bulletproof Security",
-    desc: "Green vitals and sub-second loads, hardened at the database and firewall layers for zero downtime.",
+    title: "Performance & Security",
+    desc: "45 → 85+ PageSpeed lifts, Core Web Vitals optimization, and hardened database security.",
     tags: ["Core Web Vitals", "WP Rocket", "Wordfence", "Schema Markup", "On-Page SEO"],
   },
   {
     id: "P04",
     icon: Network,
-    title: "API Integration & Headless / E-Commerce Ecosystems",
-    desc: "Connecting WordPress to external services and headless frontends, with robust, scalable WooCommerce ecosystems.",
+    title: "E-Commerce & Headless",
+    desc: "Scalable WooCommerce setups, payment gateway integrations, and REST API workflows.",
     tags: ["WooCommerce", "REST API", "Git", "Figma"],
   },
 ];
@@ -92,7 +91,7 @@ const fade = {
 };
 
 const cardTag =
-  "font-mono text-[10px] uppercase font-bold tracking-wider text-[#5F5F5F] bg-[#050505]/5 border border-[#050505]/5 px-2 py-0.5 rounded-md";
+  "font-mono text-[10px] tracking-wider uppercase opacity-70 bg-black/5 px-2 py-0.5 rounded";
 
 export default function AboutPage() {
   return (
@@ -149,7 +148,7 @@ export default function AboutPage() {
       {/* ---------------------------------------------------------------- */}
       {/* Craft Compass — expertise pillars (2×2) + custom card            */}
       {/* ---------------------------------------------------------------- */}
-      <section className="px-6 md:px-12 lg:px-24 py-14 md:py-16 bg-[#F5F5F3] border-t border-[#050505]/5">
+      <section className="px-6 md:px-12 lg:px-24 pt-12 lg:pt-16 pb-12 lg:pb-16 bg-[#F5F5F3] border-t border-[#050505]/5">
         <div className="max-w-7xl mx-auto">
           <motion.div {...fade} className="mb-8 md:mb-10 max-w-2xl">
             <span className="font-mono text-xs uppercase tracking-widest text-[#FF6B00] font-bold">
@@ -164,7 +163,7 @@ export default function AboutPage() {
           </motion.div>
 
           {/* Expertise pillars — 2×2 grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
             {PILLARS.map((pillar, idx) => {
               const Icon = pillar.icon;
               return (
@@ -172,61 +171,28 @@ export default function AboutPage() {
                   key={pillar.id}
                   {...fade}
                   transition={{ ...fade.transition, delay: idx * 0.08 }}
-                  className="group relative overflow-hidden rounded-3xl bg-white border border-[#050505]/5 p-6 hover:shadow-lg transition-all duration-500"
+                  className="group rounded-2xl bg-white/30 backdrop-blur-sm border border-black/10 hover:border-black/30 p-6 transition-all"
                 >
-                  <span className="absolute inset-0 z-0 bg-gradient-to-tr from-[#FF6B00]/7 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
-                  <div className="relative z-10">
-                    <div className="flex items-center justify-center w-11 h-11 rounded-2xl bg-[#F5F5F3] text-[#050505] group-hover:bg-[#FF6B00] group-hover:text-white transition-colors duration-500 border border-[#050505]/5 mb-5">
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <h3 className="font-sans text-lg md:text-xl font-bold tracking-tight text-[#050505] leading-snug mb-1.5">
-                      {pillar.title}
-                    </h3>
-                    <p className="font-sans text-sm text-[#5F5F5F] leading-relaxed">
-                      {pillar.desc}
-                    </p>
-                    <div className="mt-4 flex flex-wrap gap-1.5">
-                      {pillar.tags.map((tag) => (
-                        <span key={tag} className={cardTag}>
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
+                  <div className="flex items-center justify-center w-11 h-11 rounded-2xl bg-[#F5F5F3] text-[#050505] group-hover:bg-[#FF6B00] group-hover:text-white transition-colors duration-500 border border-[#050505]/5 mb-5">
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <h3 className="font-sans text-lg font-bold tracking-tight text-[#050505] mb-1.5">
+                    {pillar.title}
+                  </h3>
+                  <p className="font-sans text-xs text-black/60 leading-relaxed">
+                    {pillar.desc}
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-1.5">
+                    {pillar.tags.map((tag) => (
+                      <span key={tag} className={cardTag}>
+                        {tag}
+                      </span>
+                    ))}
                   </div>
                 </motion.div>
               );
             })}
           </div>
-
-          {/* Custom work collaborator card */}
-          <motion.div
-            {...fade}
-            className="mt-4 relative overflow-hidden rounded-3xl bg-[#0F0F0F] text-white p-6 md:p-8 flex flex-col gap-6 md:flex-row md:items-center md:justify-between"
-          >
-            <span className="absolute -bottom-1/2 -left-1/4 w-2/3 h-full rounded-full bg-[#FF6B00]/15 blur-[80px] pointer-events-none" />
-            <div className="relative z-10 max-w-2xl">
-              <div className="flex items-center gap-2 mb-2.5">
-                <Sparkles className="w-4 h-4 text-[#FF6B00]" />
-                <span className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-[#FF6B00]">
-                  Work Collaborator
-                </span>
-              </div>
-              <h3 className="font-sans text-xl md:text-2xl font-extrabold tracking-tight text-white mb-2">
-                Need custom WordPress plugins?
-              </h3>
-              <p className="font-sans text-sm md:text-base text-white/60 leading-relaxed">
-                I regularly create tailor-made solutions incorporating WP Admin overrides and
-                automated backend synchronizations inside ACF Pro.
-              </p>
-            </div>
-            <Link
-              to="/contact"
-              className="group relative z-10 shrink-0 inline-flex items-center gap-2.5 rounded-full bg-[#FF6B00] px-6 py-3.5 text-xs font-bold uppercase tracking-widest text-white transition-all duration-300 hover:bg-white hover:text-[#050505]"
-            >
-              Request Custom Work
-              <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </Link>
-          </motion.div>
         </div>
       </section>
 

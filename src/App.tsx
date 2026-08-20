@@ -110,8 +110,8 @@ export default function App() {
 
         {/* Portfolio Structural Blocks */}
         <Header activeSection={activeSection} />
-        
-        <main className="relative z-10 w-full">
+
+        <main className="relative w-full">
           <Hero lang={lang} />
           <Projects lang={lang} />
           <Approach lang={lang} />

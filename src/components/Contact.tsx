@@ -99,7 +99,7 @@ export default function Contact({ lang, hideHeader = false }: ContactProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 md:gap-24 items-start">
           
           {/* Left Column: Freelance details */}
-          <div className="lg:col-span-5 flex flex-col gap-8 lg:gap-10 text-start">
+          <div className="lg:col-span-5 w-full flex flex-col gap-8 lg:gap-10 text-start">
             {!hideHeader && (
             <div>
               <div className="flex items-center gap-2 mb-6">
@@ -188,15 +188,57 @@ export default function Contact({ lang, hideHeader = false }: ContactProps) {
                 >
                   <Linkedin className="w-4 h-4" />
                 </a>
-                <a 
-                  href="https://wa.me/923199154505?text=Hello%20Aneek%2C%20I%20visited%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project." 
-                  target="_blank" 
-                  rel="noreferrer" 
+                <a
+                  href="https://wa.me/923199154505?text=Hello%20Aneek%2C%20I%20visited%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project."
+                  target="_blank"
+                  rel="noreferrer"
                   className="w-10 h-10 rounded-full border border-[#050505]/10 hover:border-[#FF6B00] hover:text-[#FF6B00] flex items-center justify-center text-[#050505] transition-all bg-white font-mono text-xs font-bold"
                   aria-label="WhatsApp chat link"
                 >
                   WA
                 </a>
+                <a
+                  href="mailto:aneekkhokhar2@gmail.com"
+                  className="w-10 h-10 rounded-full border border-[#050505]/10 hover:border-[#FF6B00] hover:text-[#FF6B00] flex items-center justify-center text-[#050505] transition-all bg-white font-mono text-xs font-semibold"
+                  aria-label="Email link"
+                >
+                  <Mail className="w-4 h-4" />
+                </a>
+              </div>
+            </div>
+
+            {/* Direct Discovery Call Booking */}
+            <div className="mt-8 ml-0 w-full max-w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl p-6 md:p-8 box-border">
+              <div className="inline-flex items-center gap-2 bg-white border border-[#050505]/10 px-3 py-1 rounded-full mb-4">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00]" />
+                <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-[#050505]">
+                  {lang === "ur" ? "فاسٹ ٹریک" : "Fast Track"}
+                </span>
+              </div>
+
+              <h3 className="font-sans text-lg md:text-xl font-bold tracking-tight text-[#050505] mb-2">
+                {lang === "ur" ? "براہ راست حکمت عملی کال کو ترجیح دیتے ہیں؟" : "Prefer a Direct Strategy Call?"}
+              </h3>
+
+              <p className="font-sans text-sm text-[#5F5F5F] leading-relaxed mb-6">
+                {lang === "ur"
+                  ? "ای میل کے تبادلے کو نظرانداز کریں۔ اپنی ویب سائٹ کے دائرہ کار، اسپیڈ آڈٹ، یا پراجیکٹ کی ٹائم لائن پر براہ راست بات چیت کے لیے فوری 15 منٹ کی کال بک کریں۔"
+                  : "Skip the email back-and-forth. Book a quick 15-minute discovery call to discuss your website scope, speed audit, or project timelines directly."}
+              </p>
+
+              <div className="flex flex-col gap-2.5">
+                <a
+                  href="https://wa.me/923199154505?text=Hi%20Aneek%2C%20I%27d%20like%20to%20book%20a%2015-minute%20discovery%20call%20to%20discuss%20my%20project."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center justify-center gap-2 rounded-full bg-[#050505] hover:bg-[#FF6B00] text-white font-sans text-xs font-bold uppercase tracking-widest py-3.5 px-6 transition-colors duration-300 w-full sm:w-auto"
+                >
+                  {lang === "ur" ? "15 منٹ کی کال بک کریں" : "Book a 15-Min Call"}
+                  <span className="transition-transform group-hover:translate-x-0.5">→</span>
+                </a>
+                <span className="font-mono text-[11px] text-[#5F5F5F]">
+                  {lang === "ur" ? "پیر تا جمعہ دستیاب • 24 گھنٹوں میں جواب" : "Available Mon–Fri • Response within 24hrs"}
+                </span>
               </div>
             </div>
 

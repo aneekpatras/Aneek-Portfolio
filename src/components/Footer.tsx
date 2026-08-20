@@ -1,13 +1,18 @@
 import React from "react";
-import { ArrowUp, Linkedin, Github, Twitter, Instagram } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { ArrowUp, Linkedin, Github, Instagram } from "lucide-react";
 
 export default function Footer() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const handleScrollToTop = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const navLinks = [
+    { text: "Home", href: "#/" },
     { text: "About", href: "#/about" },
     { text: "Work", href: "#/work" },
     { text: "Experience", href: "#/experience" },
@@ -16,12 +21,23 @@ export default function Footer() {
 
   const socials = [
     { icon: Linkedin, href: "https://www.linkedin.com/in/aneek-patras", label: "LinkedIn" },
-    { icon: Github, href: "#", label: "GitHub" },
-    { icon: Twitter, href: "#", label: "X" },
-    { icon: Instagram, href: "#", label: "Instagram" },
+    { icon: Github, href: "https://github.com/aneekpatras", label: "GitHub" },
+    { icon: Instagram, href: "https://www.instagram.com/aneek_khokhar?igsh=c3F2YmRvdWQ1c25u", label: "Instagram" },
   ];
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    // Home always routes to "/" (or scrolls to top if already there), instead of
+    // following the hash-fragment scheme the other route links use.
+    if (href === "#/") {
+      e.preventDefault();
+      if (location.pathname === "/") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        navigate("/");
+      }
+      return;
+    }
+
     // Route links (#/about, #/work, …) navigate to another view — let the hash change through.
     if (href.startsWith("#/")) return;
 
@@ -39,7 +55,7 @@ export default function Footer() {
   return (
     <footer
       id="site-footer"
-      className="relative overflow-hidden bg-[#F5F5F3] px-4 md:px-8 lg:px-12 pt-6 pb-10"
+      className="relative w-full overflow-hidden bg-[#F5F5F3] px-4 md:px-8 lg:px-12 pt-6 pb-10"
     >
       {/* Faint oversized brand watermark behind the card */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 flex justify-center overflow-hidden">

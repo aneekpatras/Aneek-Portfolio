@@ -19,10 +19,9 @@ export default function Preloader({ onComplete }: PreloaderProps) {
     const start = performance.now();
     let rafId = 0;
 
-    // Warm the two locally-bundled hero images while the counter runs (fire-and-forget).
+    // Warm the locally-bundled hero image while the counter runs (fire-and-forget).
     [
-      "/src/assets/images/regenerated_image_1780406713775.png",
-      "/src/assets/images/regenerated_image_1780406745422.png",
+      "/images/regenerated_image_1780406713775.png",
     ].forEach((src) => {
       const img = new Image();
       img.src = src;

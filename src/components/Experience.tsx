@@ -28,7 +28,7 @@ export default function Experience({ lang, hideHeader = false }: ExperienceProps
             "متعدد کلائنٹ سائٹس کا انتظام"
           ]
         };
-      } else {
+      } else if (item.id === "exp-yahweh") {
         return {
           ...item,
           company: "یاہوے روئی آئی ٹی کمپنی",
@@ -132,7 +132,7 @@ export default function Experience({ lang, hideHeader = false }: ExperienceProps
                     {item.period}
                   </span>
                   <p className="font-sans text-[10px] text-[#5F5F5F]/60 font-semibold tracking-wider uppercase mt-1">
-                    {lang === "ur" ? "براہِ راست نیٹ ورک" : "DIRECT CONTRACTOR"}
+                    {lang === "ur" ? "براہِ راست نیٹ ورک" : (item.employmentType ?? "Direct Contractor")}
                   </p>
                 </div>
 

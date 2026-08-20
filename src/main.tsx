@@ -1,6 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { ReactLenis } from 'lenis/react';
 import App from './App.tsx';
 import AdminDashboard from './admin/AdminDashboard.tsx';
 import WorkPage from './components/WorkPage.tsx';
@@ -13,22 +14,30 @@ import './index.css';
 
 function Root() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/work" element={<WorkPage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/experience" element={<ExperiencePage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="*" element={<App />} />
-      </Routes>
-      <CustomCursor />
-      <Routes>
-        <Route path="/admin" element={null} />
-        <Route path="*" element={<Chatbot />} />
-      </Routes>
-    </BrowserRouter>
+    <ReactLenis
+      root
+      options={{
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      }}
+    >
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/work" element={<WorkPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/experience" element={<ExperiencePage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="*" element={<App />} />
+        </Routes>
+        <CustomCursor />
+        <Routes>
+          <Route path="/admin" element={null} />
+          <Route path="*" element={<Chatbot />} />
+        </Routes>
+      </BrowserRouter>
+    </ReactLenis>
   );
 }
 

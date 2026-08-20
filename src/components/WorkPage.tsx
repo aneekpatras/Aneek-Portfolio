@@ -3,7 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import { Project } from "../types";
 import { useProjects } from "../lib/projectStore";
 import { TRANSLATIONS } from "../utils";
-import ProjectCard from "./ProjectCard";
+import WorkProjectCard from "./WorkProjectCard";
 import ProjectModal from "./ProjectModal";
 import Header from "./Header";
 import PageHero from "./PageHero";
@@ -12,7 +12,7 @@ import Footer from "./Footer";
 /**
  * Dedicated "Work" page — reached via the header nav or the homepage
  * "View All" button (route: #/work). Renders every published project in a
- * 2-per-row responsive grid using the shared ProjectCard.
+ * clean 2-column grid with normal page scrolling.
  */
 export default function WorkPage() {
   const t = TRANSLATIONS["en"];
@@ -48,25 +48,24 @@ export default function WorkPage() {
       />
 
       {/* Content */}
-      <main className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 lg:px-24 pt-4 pb-16 md:pb-24">
-        {/* Full 2-per-row grid */}
+      <main className="relative z-10 px-6 md:px-12 lg:px-24 pt-4 pb-16 md:pb-24">
         {visibleProjects.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
-            {visibleProjects.map((project, idx) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 w-full max-w-7xl mx-auto">
+            {visibleProjects.map((project) => (
               // display:contents wrapper carries the list key without affecting grid layout
               <div key={project.id} className="contents">
-                <ProjectCard project={project} index={idx} onSelect={setSelectedProject} />
+                <WorkProjectCard project={project} onSelect={setSelectedProject} />
               </div>
             ))}
           </div>
         ) : (
-          <div className="rounded-3xl border border-dashed border-[#050505]/15 bg-white py-24 text-center">
+          <div className="max-w-7xl mx-auto rounded-3xl border border-dashed border-[#050505]/15 bg-white py-24 text-center">
             <p className="text-sm font-semibold text-[#5F5F5F]">No published projects yet.</p>
           </div>
         )}
 
         {/* CTA back to contact */}
-        <div className="mt-20 flex flex-col items-center gap-5 text-center">
+        <div className="max-w-7xl mx-auto mt-20 flex flex-col items-center gap-5 text-center">
           <p className="font-sans text-lg md:text-xl font-bold text-[#050505]">
             Have a project that deserves this treatment?
           </p>

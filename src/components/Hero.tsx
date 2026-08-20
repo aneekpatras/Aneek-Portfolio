@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "motion/react";
-import { ArrowDown, ArrowUpRight, Download, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ArrowUpRight, Download } from "lucide-react";
 import { TRANSLATIONS } from "../utils";
 
 interface HeroProps {
@@ -19,19 +20,10 @@ export default function Hero({ lang }: HeroProps) {
     }
   };
 
-  const handleScrollToContact = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const target = document.querySelector("#contact");
-    if (target) {
-      const offsetTop = target.getBoundingClientRect().top + window.scrollY - 100;
-      window.scrollTo({ top: offsetTop, behavior: "smooth" });
-    }
-  };
-
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 pt-20 pb-20 overflow-hidden bg-[#F5F5F3]"
+      className="relative z-10 w-full flex flex-col justify-center px-6 md:px-12 lg:px-24 py-12 md:py-16 pt-28 md:pt-32 pb-16 md:pb-20 overflow-hidden bg-[#F5F5F3]"
     >
       {/* Background Interactive Gradient Balls */}
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -45,21 +37,6 @@ export default function Hero({ lang }: HeroProps) {
 
       {/* Hero Content Container */}
       <div className="relative z-10 max-w-7xl mx-auto w-full flex flex-col justify-center flex-grow text-start">
-        
-        {/* Subtle Top Hook Tagline */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="flex flex-col gap-1 mb-5"
-        >
-          <span className="text-[#FF6B00] text-xs font-bold uppercase tracking-[0.4em] block">
-            {t.heroTitlePre} • 2026
-          </span>
-          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#5F5F5F] font-bold block">
-            {t.availableContracts}
-          </span>
-        </motion.div>
 
         {/* Huge Editorial Headline (140px-180px Desktop Scale Theme) */}
         <h1 className="select-none text-start uppercase">
@@ -152,19 +129,18 @@ export default function Hero({ lang }: HeroProps) {
               </span>
             </button>
 
-            <a
-              href="#contact"
+            <Link
+              to="/contact"
               className="group rounded-full border border-[#050505]/15 bg-transparent px-8 py-4 text-xs font-bold uppercase tracking-widest text-[#050505] transition-all duration-300 hover:border-[#FF6B00] hover:bg-white"
             >
               <span className="flex items-center gap-2">
                 {t.hireMe}
                 <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B00]" />
               </span>
-            </a>
+            </Link>
 
             <a
-              href="/Aneek_Patras_Resume.pdf"
-              download="Aneek_Patras_Resume.pdf"
+              href="https://drive.google.com/uc?export=download&id=18ULXzAJ9vG56x77O_YKEtuBwr_vXcpWf"
               target="_blank"
               rel="noopener noreferrer"
               className="group bg-transparent px-6 py-4 text-xs font-bold uppercase tracking-widest text-[#5F5F5F] hover:text-[#050505] transition-all flex items-center gap-1.5"
@@ -173,28 +149,6 @@ export default function Hero({ lang }: HeroProps) {
               {t.downloadResume}
             </a>
           </motion.div>
-        </div>
-
-        {/* Scroll down indicator — in normal flow below the CTA row (no overlap) */}
-        <div className="mt-12 md:mt-16 hidden md:flex items-center justify-center gap-3">
-          <p className="font-mono text-[9px] tracking-[0.25em] text-[#5F5F5F]/80 uppercase">
-            {lang === "en" ? "SCROLL FOR THE DESIGN STORY" : "ڈیزائن کی کہانی کے لیے نیچے سکرول کریں"}
-          </p>
-          <motion.button
-            animate={{ y: [0, 5, 0] }}
-            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-            onClick={(e) => {
-              e.preventDefault();
-              const nextSec = document.querySelector("#projects");
-              if (nextSec) {
-                const offsetTop = nextSec.getBoundingClientRect().top + window.scrollY - 100;
-                window.scrollTo({ top: offsetTop, behavior: 'smooth' });
-              }
-            }}
-            className="flex items-center justify-center w-8 h-8 rounded-full border border-[#050505]/10 text-[#5F5F5F] hover:border-[#FF6B00] hover:text-[#FF6B00] hover:bg-white transition-all duration-300 cursor-pointer"
-          >
-            <ArrowDown className="w-3.5 h-3.5" />
-          </motion.button>
         </div>
       </div>
     </section>

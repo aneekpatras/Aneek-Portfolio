@@ -97,7 +97,7 @@ export default function Testimonials({ lang }: TestimonialsProps) {
   return (
     <section
       id="testimonials"
-      className="relative py-16 md:py-20 px-6 md:px-12 lg:px-24 bg-[#FAFAF9] border-t border-[#050505]/5"
+      className="relative w-full py-16 md:py-20 px-6 md:px-12 lg:px-24 bg-[#FAFAF9] border-t border-[#050505]/5"
     >
       {/* Background grid indicators matching rest of layout */}
       <div className="absolute inset-0 z-0 pointer-events-none flex justify-between px-6 md:px-12 lg:px-24">

@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
  */
 export default function CTABanner() {
   return (
-    <section className="px-4 md:px-8 lg:px-12 pb-16 md:pb-20 bg-[#F5F5F3]">
+    <section className="relative w-full px-4 md:px-8 lg:px-12 pb-16 md:pb-20 bg-[#F5F5F3]">
       <div className="mx-auto max-w-[100rem]">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

@@ -49,7 +49,7 @@ export default function FAQ({ lang: _lang = "en" }: FAQProps) {
   return (
     <section
       id="faq"
-      className="relative py-16 md:py-20 px-6 md:px-12 lg:px-24 bg-[#F5F5F3] border-t border-[#050505]/5"
+      className="relative w-full py-16 md:py-20 px-6 md:px-12 lg:px-24 bg-[#F5F5F3] border-t border-[#050505]/5"
     >
       <div className="relative z-10 max-w-7xl mx-auto">
         {/* Header */}
