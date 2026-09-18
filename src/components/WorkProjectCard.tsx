@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { motion, AnimatePresence, useMotionValue, useSpring } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 import { Project } from "../types";
 import { getUnsplashUrl, getUnsplashSrcSet } from "../utils";
@@ -5,7 +7,11 @@ import { getUnsplashUrl, getUnsplashSrcSet } from "../utils";
 interface WorkProjectCardProps {
   project: Project;
   onSelect: (project: Project) => void;
+  index?: number;
 }
+
+// Diameter of the cursor-following "View" bubble — matches the homepage card.
+const BUBBLE = 88;
 
 function resolveSrc(url: string) {
   return url.includes("unsplash.com")
@@ -14,74 +20,118 @@ function resolveSrc(url: string) {
 }
 
 /**
- * Work page grid card — a 3D flip card. The front is a full image preview;
- * hovering rotates it 180° to reveal the project's details on the back.
+ * Work page grid card. Mirrors the homepage ProjectCard interaction exactly:
+ * the whole card opens the case-study modal on click/tap, and on hover
+ * (desktop) the image crossfades to its secondary preview while a
+ * cursor-following "View" bubble appears. Tag pills sit over the image so
+ * category info and the tap target stay visible on mobile too.
  */
-export default function WorkProjectCard({ project, onSelect }: WorkProjectCardProps) {
+export default function WorkProjectCard({ project, onSelect, index = 0 }: WorkProjectCardProps) {
+  const [hovered, setHovered] = useState(false);
+
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const springConfig = { stiffness: 350, damping: 30, mass: 0.4 };
+  const sx = useSpring(x, springConfig);
+  const sy = useSpring(y, springConfig);
+
   const primarySrc = resolveSrc(project.image);
+  const hoverRaw = project.hoverImage || project.gallery?.[0] || project.image;
+  const hoverSrc = resolveSrc(hoverRaw);
+  const isUnsplash = project.image.includes("unsplash.com");
+
+  const handleMove = (e: { currentTarget: HTMLElement; clientX: number; clientY: number }) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    x.set(e.clientX - rect.left - BUBBLE / 2);
+    y.set(e.clientY - rect.top - BUBBLE / 2);
+  };
 
   return (
-    <div className="group [perspective:1000px]">
-      <div className="relative h-[320px] w-full transition-transform duration-500 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)] md:h-[420px]">
-        {/* Front — full image preview */}
-        <div className="absolute inset-0 overflow-hidden rounded-2xl shadow-lg [backface-visibility:hidden]">
-          <img
-            src={primarySrc}
-            srcSet={getUnsplashSrcSet(project.image)}
-            sizes="(max-width: 768px) 92vw, 46vw"
-            alt={project.title}
-            loading="lazy"
-            referrerPolicy="no-referrer"
-            className="h-full w-full object-cover"
-          />
+    <motion.article
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.6, delay: (index % 4) * 0.06, ease: [0.16, 1, 0.3, 1] }}
+      onClick={() => onSelect(project)}
+      className="group w-full flex flex-col cursor-pointer"
+    >
+      <div
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onMouseMove={handleMove}
+        className="relative overflow-hidden rounded-3xl bg-[#F5F5F3] border border-[#050505]/5 h-[260px] sm:h-[320px] md:h-[380px] shadow-xs transition-shadow duration-500 group-hover:shadow-xl md:cursor-none"
+      >
+        {/* Primary image */}
+        <img
+          src={primarySrc}
+          srcSet={getUnsplashSrcSet(project.image)}
+          sizes="(max-width: 768px) 92vw, 46vw"
+          alt={project.title}
+          loading="lazy"
+          referrerPolicy="no-referrer"
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
+        />
+
+        {/* Secondary image — crossfades in on hover */}
+        <img
+          src={hoverSrc}
+          srcSet={isUnsplash ? getUnsplashSrcSet(hoverRaw) : undefined}
+          sizes="(max-width: 768px) 92vw, 46vw"
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          referrerPolicy="no-referrer"
+          className="absolute inset-0 w-full h-full object-cover scale-[1.05] opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100"
+        />
+
+        {/* Subtle darkening so the bubble/tags read on any image */}
+        <div className="absolute inset-0 bg-[#050505]/0 transition-colors duration-500 group-hover:bg-[#050505]/15" />
+
+        {/* Tag pills, always visible so mobile keeps the same info as desktop hover */}
+        <div className="absolute top-4 left-4 z-10 flex flex-wrap gap-1.5 max-w-[85%]">
+          {project.tags.slice(0, 3).map((tag) => (
+            <span
+              key={tag}
+              className="rounded-full bg-white/90 backdrop-blur-xs px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-wide text-[#050505] shadow-xs"
+            >
+              {tag}
+            </span>
+          ))}
         </div>
 
-        {/* Back — project details */}
-        <div className="absolute inset-0 flex flex-col justify-between rounded-2xl bg-[#050505] p-6 shadow-lg [backface-visibility:hidden] [transform:rotateY(180deg)] md:p-8">
-          <div>
-            <span className="font-mono text-xs uppercase tracking-widest text-[#FF6B00]">
-              {project.category}
-            </span>
-            <h3 className="mt-2 font-sans text-xl font-bold tracking-tight text-white md:text-2xl">
-              {project.title}
-            </h3>
-            <p className="mt-3 font-sans text-sm leading-relaxed text-white/60 line-clamp-4">
-              {project.subtitle}
-            </p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {project.tags.slice(0, 5).map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wide text-white/70"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          <div className="mt-4 flex flex-wrap items-center gap-3">
-            <button
-              onClick={() => onSelect(project)}
-              className="group/btn inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-widest text-[#050505] transition-colors duration-300 hover:bg-[#FF6B00] hover:text-white"
+        {/* Cursor-following "View" bubble (desktop only) */}
+        <AnimatePresence>
+          {hovered && (
+            <motion.div
+              key="view-bubble"
+              className="pointer-events-none absolute top-0 left-0 z-20 hidden md:flex items-center justify-center rounded-full bg-[#FF6B00] text-white shadow-lg"
+              style={{ x: sx, y: sy, width: BUBBLE, height: BUBBLE }}
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
             >
-              Case Study
-              <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-            </button>
-            {project.link && (
-              <a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group/btn inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-widest text-white transition-colors duration-300 hover:border-[#FF6B00] hover:text-[#FF6B00]"
-              >
-                Live Demo
-                <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-              </a>
-            )}
-          </div>
+              <span className="font-mono text-[11px] font-bold uppercase tracking-widest flex items-center gap-1">
+                View
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Static tap affordance for touch devices, since there's no hover state there */}
+        <div className="md:hidden absolute bottom-4 right-4 z-10 inline-flex items-center gap-1.5 rounded-full bg-[#FF6B00] text-white px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-widest shadow-lg">
+          View
+          <ArrowUpRight className="w-3 h-3" />
         </div>
       </div>
-    </div>
+
+      <h3 className="shrink-0 mt-3 px-1 font-sans text-base md:text-lg font-semibold tracking-tight text-[#050505] transition-colors duration-300 group-hover:text-[#FF6B00]">
+        {project.title}
+      </h3>
+      <p className="px-1 font-mono text-[11px] uppercase tracking-widest text-[#5F5F5F] font-semibold mt-1">
+        {project.category}
+      </p>
+    </motion.article>
   );
 }

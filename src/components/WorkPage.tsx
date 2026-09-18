@@ -50,11 +50,11 @@ export default function WorkPage() {
       {/* Content */}
       <main className="relative z-10 px-6 md:px-12 lg:px-24 pt-4 pb-16 md:pb-24">
         {visibleProjects.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 w-full max-w-7xl mx-auto">
-            {visibleProjects.map((project) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 lg:gap-x-10 w-full max-w-7xl mx-auto">
+            {visibleProjects.map((project, idx) => (
               // display:contents wrapper carries the list key without affecting grid layout
               <div key={project.id} className="contents">
-                <WorkProjectCard project={project} onSelect={setSelectedProject} />
+                <WorkProjectCard project={project} index={idx} onSelect={setSelectedProject} />
               </div>
             ))}
           </div>
