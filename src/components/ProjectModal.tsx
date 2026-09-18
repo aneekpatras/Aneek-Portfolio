@@ -30,34 +30,37 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100000] flex items-center justify-center p-4 md:p-8"
+          // This fixed layer IS the one and only scroll container — no nested
+          // overflow anywhere inside it, so the mouse wheel/trackpad always
+          // scrolls it directly instead of hunting for the "right" element.
+          className="fixed inset-0 z-[100000] overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]"
           onClick={onClose}
         >
-          {/* Backdrop kept separate from the animated/scrollable panel so it
-              never interferes with the panel's own transform or scroll. */}
-          <div className="absolute inset-0 bg-[#050505]/75 backdrop-blur-sm" />
+          {/* Backdrop — fixed independently so it always covers the viewport
+              regardless of how far the overlay above has scrolled. */}
+          <div className="fixed inset-0 bg-[#050505]/75 backdrop-blur-sm" />
 
-          <motion.div
-            initial={{ scale: 0.96, y: 20 }}
-            animate={{ scale: 1, y: 0 }}
-            exit={{ scale: 0.96, y: 20 }}
-            transition={{ type: "spring", duration: 0.5 }}
-            onClick={(e) => e.stopPropagation()}
-            className="relative bg-[#F5F5F3] text-[#050505] rounded-3xl w-full max-w-4xl max-h-[90vh] shadow-2xl border border-[#050505]/10 font-sans overflow-hidden"
+          {/* Close button — fixed to the viewport corner (not the panel), so
+              it's always visible and never scrolls away or gets clipped. */}
+          <button
+            onClick={onClose}
+            className="fixed top-4 right-4 md:top-6 md:right-6 z-[100001] w-10 h-10 rounded-full bg-white/90 backdrop-blur-xs hover:bg-[#FF6B00] hover:text-white text-[#050505] flex items-center justify-center transition-all border border-[#050505]/10 cursor-pointer shadow-md"
+            aria-label="Close modal"
           >
-            {/* Close button — fixed to the panel corner, outside the scrolling
-                content below, so it never scrolls away or gets clipped. */}
-            <button
-              onClick={onClose}
-              className="absolute top-4 right-4 z-30 w-10 h-10 rounded-full bg-white/90 backdrop-blur-xs hover:bg-[#FF6B00] hover:text-white text-[#050505] flex items-center justify-center transition-all border border-[#050505]/10 cursor-pointer shadow-md"
-              aria-label="Close modal"
-            >
-              <X className="w-5 h-5" />
-            </button>
+            <X className="w-5 h-5" />
+          </button>
 
-            {/* Everything below is the single scrollable region — smooth
-                native wheel/touch scrolling, no nested scroll containers. */}
-            <div className="max-h-[90vh] overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]">
+          {/* Spacer wrapper centers the panel within the scrollable overlay
+              without introducing its own overflow. */}
+          <div className="relative min-h-full flex items-center justify-center p-4 md:p-8">
+            <motion.div
+              initial={{ scale: 0.96, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.96, y: 20 }}
+              transition={{ type: "spring", duration: 0.5 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative bg-[#F5F5F3] text-[#050505] rounded-3xl w-full max-w-4xl shadow-2xl border border-[#050505]/10 font-sans overflow-hidden"
+            >
               {/* Image banner inside modal */}
               <div className="h-64 md:h-80 w-full relative">
                 <picture>
@@ -193,8 +196,8 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                   Close Case Study
                 </button>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>,

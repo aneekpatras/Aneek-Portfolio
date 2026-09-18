@@ -23,8 +23,7 @@ function resolveSrc(url: string) {
  * Work page grid card. Mirrors the homepage ProjectCard interaction exactly:
  * the whole card opens the case-study modal on click/tap, and on hover
  * (desktop) the image crossfades to its secondary preview while a
- * cursor-following "View" bubble appears. Tag pills sit over the image so
- * category info and the tap target stay visible on mobile too.
+ * cursor-following "View" bubble appears.
  */
 export default function WorkProjectCard({ project, onSelect, index = 0 }: WorkProjectCardProps) {
   const [hovered, setHovered] = useState(false);
@@ -84,20 +83,8 @@ export default function WorkProjectCard({ project, onSelect, index = 0 }: WorkPr
           className="absolute inset-0 w-full h-full object-cover scale-[1.05] opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100"
         />
 
-        {/* Subtle darkening so the bubble/tags read on any image */}
+        {/* Subtle darkening so the bubble reads on any image */}
         <div className="absolute inset-0 bg-[#050505]/0 transition-colors duration-500 group-hover:bg-[#050505]/15" />
-
-        {/* Tag pills, always visible so mobile keeps the same info as desktop hover */}
-        <div className="absolute top-4 left-4 z-10 flex flex-wrap gap-1.5 max-w-[85%]">
-          {project.tags.slice(0, 3).map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full bg-white/90 backdrop-blur-xs px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-wide text-[#050505] shadow-xs"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
 
         {/* Cursor-following "View" bubble (desktop only) */}
         <AnimatePresence>
@@ -126,12 +113,9 @@ export default function WorkProjectCard({ project, onSelect, index = 0 }: WorkPr
         </div>
       </div>
 
-      <h3 className="shrink-0 mt-3 px-1 font-sans text-base md:text-lg font-semibold tracking-tight text-[#050505] transition-colors duration-300 group-hover:text-[#FF6B00]">
+      <h3 className="shrink-0 mt-3 px-1 font-sans text-sm md:text-base font-semibold tracking-tight text-[#050505] transition-colors duration-300 group-hover:text-[#FF6B00]">
         {project.title}
       </h3>
-      <p className="px-1 font-mono text-[11px] uppercase tracking-widest text-[#5F5F5F] font-semibold mt-1">
-        {project.category}
-      </p>
     </motion.article>
   );
 }
