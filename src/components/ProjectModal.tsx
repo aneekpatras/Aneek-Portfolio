@@ -33,6 +33,12 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
           // This fixed layer IS the one and only scroll container — no nested
           // overflow anywhere inside it, so the mouse wheel/trackpad always
           // scrolls it directly instead of hunting for the "right" element.
+          // data-lenis-prevent is required because the whole site runs on a
+          // global Lenis smooth-scroll instance (see main.tsx) that hijacks
+          // wheel events on <html> — without this attribute Lenis intercepts
+          // the wheel and smooth-scrolls the page behind the modal instead of
+          // this element, which is why only dragging the scrollbar worked.
+          data-lenis-prevent
           className="fixed inset-0 z-[100000] overflow-y-auto overscroll-contain [-webkit-overflow-scrolling:touch]"
           onClick={onClose}
         >
