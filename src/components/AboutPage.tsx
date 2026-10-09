@@ -24,8 +24,8 @@ const PRINCIPLES = [
   },
   {
     icon: Ban,
-    title: "Zero Bloatware",
-    desc: "No heavy page builders dragging down your site. Just lightweight, hand-crafted markup that loads instantly.",
+    title: "Page Builder Mastery",
+    desc: "Expert in Elementor, WPBakery, and similar page builders — delivering pixel-perfect, flexible layouts that are still lean and fast.",
   },
   {
     icon: Smartphone,
@@ -46,8 +46,8 @@ const PILLARS = [
     id: "P02",
     icon: Zap,
     title: "Modern Frontend",
-    desc: "Sub-second loading interfaces with React, Gutenberg, and bloat-free Elementor layouts.",
-    tags: ["React", "JavaScript", "Tailwind CSS", "Gutenberg", "Elementor"],
+    desc: "Expert Elementor and WPBakery builds, plus React and Gutenberg, for fast, polished interfaces.",
+    tags: ["Elementor", "WPBakery", "Page Builders", "React", "Gutenberg"],
   },
   {
     id: "P03",
@@ -101,7 +101,7 @@ export default function AboutPage() {
         compact
         eyebrow="About Me"
         title="I bridge the gap between heavy, slow platforms and lightning-fast digital experiences."
-        subtitle="As a WordPress Developer & Frontend Architect, I focus on custom clean code, speed optimization, and bulletproof security. I build websites that don't just look stunning on every screen, but actively turn visitors into buyers."
+        subtitle="As a WordPress Developer & Frontend Architect, I specialize in Elementor, WPBakery, and similar page builders, backed by custom clean code, speed optimization, and bulletproof security. I build websites that don't just look stunning on every screen, but actively turn visitors into buyers."
       />
 
       {/* ---------------------------------------------------------------- */}

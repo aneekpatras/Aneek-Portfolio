@@ -33,8 +33,8 @@ export default function About({ lang }: AboutProps) {
   const highlights = [
     {
       icon: Zap,
-      title: "Instant Load Speeds",
-      desc: "Say goodbye to heavy page builders that lag. I use clean, modern architecture so your pages load in a blink.",
+      title: "Page Builder Expertise",
+      desc: "Deep expertise in Elementor, WPBakery, and similar page builders — tuned and optimized so your pages stay fast and load in a blink.",
     },
     {
       icon: ShieldCheck,

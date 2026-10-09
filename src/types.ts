@@ -271,26 +271,26 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     id: "kssmartbeauty",
     title: "Looks Smart Beauty Salon",
     category: "Salon Booking & Management App",
-    subtitle: "A luxury salon web application featuring seamless appointment booking, client follow-ups, and a comprehensive admin dashboard to track revenue, leads, and operational schedules.",
-    image: "/images/lsbs.png",
-    tags: ["React", "React Router 6", "Tailwind CSS", "Radix UI", "shadcn/ui", "Base44"],
+    subtitle: "A services-based web app with a fully functional admin panel, lead tracking, and a dashboard to manage the salon's day-to-day operations.",
+    image: "/images/lookssmart-shop.png",
+    tags: ["Laravel", "PHP", "React"],
     performanceMetric: {
       label: "Feature Set",
       value: "Admin Dashboard & Lead Tracking"
     },
-    overview: "A modern, Progressive Web App (PWA) built for Looks Smart Beauty Salon. It offers a premium front-end experience for client appointment scheduling alongside a powerful backend administrative portal to manage day-to-day salon operations.",
-    challenge: "Designing an elegant, high-end booking flow for salon services while engineering a real-time admin management hub to handle bookings, revenue stats, client leads, and business hours.",
-    solution: "Engineered using modern web technologies via Base44 with React and React Router 6. Designed with Tailwind CSS, Radix UI, and shadcn/ui for dynamic components. Integrated a comprehensive admin dashboard to monitor revenue metrics, lead statuses, customer follow-ups, and service schedules, packaged as a PWA with Cloudflare CDN deployment.",
+    overview: "A services-based web application for Looks Smart Beauty Salon, Lahore. It pairs a premium client-facing site showcasing salon services with a fully functional admin panel, lead tracking, and a dashboard for running the business.",
+    challenge: "Presenting a wide range of salon services in an elegant, high-end experience while giving the team one place to manage services, capture and follow up on leads, and monitor business activity.",
+    solution: "Built with Laravel and PHP on the backend and React on the frontend. Delivered a fully functional admin panel for managing services and content, lead tracking to capture and follow up on inquiries, and a dashboard summarizing key activity at a glance.",
     results: [
-      "Full-featured client booking system with custom scheduling",
-      "Integrated admin dashboard for revenue tracking and lead follow-ups",
-      "PWA support for app-like usability across mobile devices",
-      "Modern accessible UI built with Radix UI, shadcn/ui, and Tailwind CSS"
+      "Services-based web app showcasing the salon's full offering",
+      "Fully functional admin panel for managing services and content",
+      "Lead tracking to capture and follow up on client inquiries",
+      "Dashboard for a clear overview of business activity"
     ],
     completionYear: "2026",
-    link: "https://lookssmartbeautysalon.base44.app/",
+    link: "https://lookssmart.shop/",
     displayOrder: 8,
-    hoverImage: "/images/lsbshower.png",
+    hoverImage: "/images/lookssmart-shop.png",
     featured: true
   }
 ];
@@ -350,7 +350,7 @@ export const SKILL_ITEMS: SkillItem[] = [
 export const EXPERIENCE_TIMELINE: Experience[] = [
   {
     id: "exp-oz",
-    company: "Oz Group",
+    company: "Oz Tech Work",
     role: "WordPress Developer",
     period: "Dec 2025 – Present",
     employmentType: "Direct Contractor",
@@ -377,7 +377,7 @@ export const EXPERIENCE_TIMELINE: Experience[] = [
   },
   {
     id: "exp-yahweh",
-    company: "Yahwehroi IT Company",
+    company: "Mixintech IT Company",
     role: "WordPress Developer",
     period: "Sep 2024 – Jun 2025",
     employmentType: "Direct Contractor",
