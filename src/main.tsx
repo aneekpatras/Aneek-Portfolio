@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ReactLenis } from 'lenis/react';
 import App from './App.tsx';
 import AdminDashboard from './admin/AdminDashboard.tsx';
+import AuthGuard from './admin/AuthGuard.tsx';
 import WorkPage from './components/WorkPage.tsx';
 import AboutPage from './components/AboutPage.tsx';
 import ExperiencePage from './components/ExperiencePage.tsx';
@@ -24,7 +25,14 @@ function Root() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<App />} />
-          <Route path="/admin" element={<AdminDashboard />} />
+          <Route
+            path="/admin"
+            element={
+              <AuthGuard>
+                <AdminDashboard />
+              </AuthGuard>
+            }
+          />
           <Route path="/work" element={<WorkPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/experience" element={<ExperiencePage />} />
