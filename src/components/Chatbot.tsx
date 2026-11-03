@@ -4,6 +4,7 @@ import { MessageCircle, X, Send } from "lucide-react";
 import { useProjects } from "../lib/projectStore";
 import { useChatbotData, chatbotApi } from "../lib/chatbotStore";
 import { answerQuery } from "../lib/chatEngine";
+import { askSupport } from "../lib/supportApi";
 
 interface Message {
   role: "bot" | "user";
@@ -39,26 +40,45 @@ export default function Chatbot() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, typing, open]);
 
-  const send = (text: string) => {
+  const send = async (text: string) => {
     const q = text.trim();
     if (!q || typing) return;
     setMessages((m) => [...m, { role: "user", text: q }]);
     setInput("");
     setTyping(true);
 
-    // Compute the answer, then reveal after a short "typing" delay.
-    const result = answerQuery(q, { projects, qa, logs });
-    window.setTimeout(() => {
-      setMessages((m) => [...m, { role: "bot", text: result.text }]);
-      setTyping(false);
-      // Log the turn — feeds reinforcement + unmatched-question training.
-      chatbotApi.logChat({
-        question: q,
-        answer: result.text,
-        matchedId: result.matchedId,
-        matched: result.matched,
-      });
-    }, 550);
+    // Ask the backend, but keep the "typing" indicator visible for at least 550ms.
+    const minDelay = new Promise<void>((resolve) => window.setTimeout(resolve, 550));
+    const [remote] = await Promise.all([askSupport(q), minDelay]);
+
+    let replyText: string;
+    let matchedId: string | null = null;
+    let matched: boolean;
+
+    if (remote.ok && remote.answered) {
+      // Verified answer from the backend (FAQ + Gemini).
+      replyText = remote.answer;
+      matched = true;
+    } else if (!remote.ok && remote.reason === "rate_limited") {
+      replyText = remote.message ?? "Please wait a moment before sending another message.";
+      matched = false;
+    } else {
+      // Backend unavailable or had no verified answer: use the original local engine.
+      const local = answerQuery(q, { projects, qa, logs });
+      replyText = local.text;
+      matchedId = local.matchedId;
+      matched = local.matched;
+    }
+
+    setMessages((m) => [...m, { role: "bot", text: replyText }]);
+    setTyping(false);
+    // Log the turn — feeds reinforcement + unmatched-question training.
+    chatbotApi.logChat({
+      question: q,
+      answer: replyText,
+      matchedId,
+      matched,
+    });
   };
 
   const showSuggestions = messages.length <= 1;
