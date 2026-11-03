@@ -20,6 +20,7 @@ export interface SupportResult {
   ok: boolean;
   answer?: string;
   answered?: boolean;
+  outcome?: "answered" | "no_answer" | "ai_unavailable";
   reason?: "not_configured" | "rate_limited" | "error";
   message?: string;
 }
@@ -115,7 +116,16 @@ export async function askSupport(message: string): Promise<SupportResult> {
       return { ok: false, reason: "error" };
     }
 
-    return { ok: true, answer: data.answer, answered: data.answered === true };
+    const outcome =
+      data.outcome === "answered" || data.outcome === "no_answer" || data.outcome === "ai_unavailable"
+        ? data.outcome
+        : undefined;
+    return {
+      ok: true,
+      answer: data.answer,
+      outcome,
+      answered: data.answered === true,
+    };
   } catch {
     return { ok: false, reason: "error" };
   }

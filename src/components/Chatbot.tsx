@@ -9,6 +9,7 @@ import { askSupport } from "../lib/supportApi";
 interface Message {
   role: "bot" | "user";
   text: string;
+  handoffQuestion?: string;
 }
 
 const SUGGESTIONS = [
@@ -19,6 +20,21 @@ const SUGGESTIONS = [
   "How long does a project take?",
   "Do you build e-commerce websites?",
 ];
+const WHATSAPP_NUMBER = "923199154505";
+const CONTACT_EMAIL = "aneekkhokhar2@gmail.com";
+const HANDOFF_TEXT =
+  "I don't have verified information about that yet. You can ask Aneek directly:";
+
+function whatsappUrl(question: string) {
+  const text = `Hi Aneek, I asked your website chatbot: "${question.slice(0, 300)}"`;
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+}
+
+function emailUrl(question: string) {
+  const subject = "Question from your portfolio website";
+  const body = `Hi Aneek,\n\n${question.slice(0, 500)}`;
+  return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
 
 const GREETING: Message = {
   role: "bot",
@@ -54,23 +70,32 @@ export default function Chatbot() {
     let replyText: string;
     let matchedId: string | null = null;
     let matched: boolean;
+    let handoff = false;
 
     if (remote.ok && remote.answered) {
       // Verified answer from the backend (FAQ + Gemini).
-      replyText = remote.answer;
+      replyText = remote.answer ?? "";
       matched = true;
     } else if (!remote.ok && remote.reason === "rate_limited") {
       replyText = remote.message ?? "Please wait a moment before sending another message.";
       matched = false;
+    } else if (remote.ok && remote.outcome === "no_answer") {
+      // Backend worked but has no verified answer: hand off to the owner.
+      replyText = HANDOFF_TEXT;
+      matched = false;
+      handoff = true;
     } else {
-      // Backend unavailable or had no verified answer: use the original local engine.
+      // Real backend problem (network, 5xx, timeout, AI unavailable): local engine.
       const local = answerQuery(q, { projects, qa, logs });
       replyText = local.text;
       matchedId = local.matchedId;
       matched = local.matched;
     }
 
-    setMessages((m) => [...m, { role: "bot", text: replyText }]);
+    setMessages((m) => [
+      ...m,
+      { role: "bot", text: replyText, ...(handoff ? { handoffQuestion: q } : {}) },
+    ]);
     setTyping(false);
     // Log the turn — feeds reinforcement + unmatched-question training.
     chatbotApi.logChat({
@@ -125,6 +150,24 @@ export default function Chatbot() {
                     }`}
                   >
                     {m.text}
+                                        {m.handoffQuestion && (
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        <a
+                          href={whatsappUrl(m.handoffQuestion)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="rounded-full bg-[#FF6B00] px-3 py-1.5 text-xs font-bold text-white transition-colors hover:bg-[#050505]"
+                        >
+                          WhatsApp Aneek
+                        </a>
+                        <a
+                          href={emailUrl(m.handoffQuestion)}
+                          className="rounded-full border border-[#050505]/12 px-3 py-1.5 text-xs font-bold text-[#050505] transition-colors hover:border-[#FF6B00] hover:text-[#FF6B00]"
+                        >
+                          Email
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
