@@ -109,7 +109,7 @@ export default function Chatbot() {
   const showSuggestions = messages.length <= 1;
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9998] hidden sm:block">
+    <div className="fixed bottom-4 right-4 z-[9998] sm:bottom-6 sm:right-6" style={{ marginBottom: "env(safe-area-inset-bottom)" }}>
       {/* Chat card */}
       <AnimatePresence>
         {open && (
@@ -118,7 +118,7 @@ export default function Chatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.96 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute bottom-20 right-0 flex h-[560px] w-[380px] max-w-[calc(100vw-3rem)] flex-col overflow-hidden rounded-3xl border border-[#050505]/8 bg-[#F5F5F3] shadow-[0_25px_70px_-20px_rgba(0,0,0,0.35)]"
+            className="absolute bottom-20 right-0 flex h-[calc(100dvh-7rem)] max-h-[560px] w-[calc(100vw-2rem)] sm:h-[560px] sm:w-[380px] sm:max-w-[calc(100vw-3rem)] flex-col overflow-hidden rounded-3xl border border-[#050505]/8 bg-[#F5F5F3] shadow-[0_25px_70px_-20px_rgba(0,0,0,0.35)]"
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-[#050505]/8 px-5 py-4">
@@ -139,11 +139,11 @@ export default function Chatbot() {
             </div>
 
             {/* Messages */}
-            <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-5 py-5">
+            <div ref={scrollRef} data-lenis-prevent className="flex-1 min-h-0 space-y-3 overflow-y-auto overscroll-contain px-5 py-5">
               {messages.map((m, i) => (
                 <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                   <div
-                    className={`max-w-[85%] rounded-2xl px-4 py-2.5 font-sans text-sm leading-relaxed ${
+                    className={`max-w-[88%] break-words rounded-2xl px-4 py-2.5 font-sans text-sm leading-relaxed ${
                       m.role === "user"
                         ? "bg-[#FF6B00] text-white rounded-br-sm"
                         : "bg-white/70 text-[#050505] border border-[#050505]/5 rounded-bl-sm"
@@ -215,7 +215,7 @@ export default function Chatbot() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Type a question…"
-                className="flex-1 rounded-full border border-[#FF6B00]/30 bg-white/60 px-4 py-2.5 font-sans text-sm text-[#050505] outline-none transition-colors placeholder:text-[#5F5F5F]/60 focus:border-[#FF6B00]"
+                className="flex-1 min-w-0 rounded-full border border-[#FF6B00]/30 bg-white/60 px-4 py-2.5 font-sans text-base sm:text-sm text-[#050505] outline-none transition-colors placeholder:text-[#5F5F5F]/60 focus:border-[#FF6B00]"
               />
               <button
                 type="submit"
