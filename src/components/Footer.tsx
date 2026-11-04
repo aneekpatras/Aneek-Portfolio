@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { ArrowUp, Linkedin, Github, Instagram } from "lucide-react";
 
 export default function Footer() {
@@ -108,15 +108,15 @@ export default function Footer() {
               </span>
               <nav className="mt-5 grid grid-cols-2 gap-x-12 gap-y-3">
                 {navLinks.map((link) => (
-                  <a
+                  <Link
                     key={link.text}
-                    href={link.href}
+                    to={link.href === "#/" ? "/" : link.href.substring(1)}
                     onClick={(e) => handleNavClick(e, link.href)}
                     className="group inline-flex w-fit items-center gap-2 font-sans text-sm text-[#5F5F5F] transition-colors duration-300 hover:text-[#FF6B00]"
                   >
                     <span className="h-1 w-1 rounded-full bg-[#FF6B00]/0 transition-colors duration-300 group-hover:bg-[#FF6B00]" />
                     {link.text}
-                  </a>
+                  </Link>
                 ))}
               </nav>
             </div>

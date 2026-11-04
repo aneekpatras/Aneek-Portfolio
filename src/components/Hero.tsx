@@ -41,7 +41,7 @@ export default function Hero({ lang }: HeroProps) {
         {/* Huge Editorial Headline (140px-180px Desktop Scale Theme) */}
         <h1 className="select-none text-start uppercase">
           {lang === "en" ? (
-            <div className="font-sans text-6xl sm:text-7xl md:text-[6.5rem] lg:text-[7.5rem] xl:text-[9rem] tracking-[-0.045em] font-black text-[#050505] leading-[0.83] uppercase">
+            <div className="font-sans text-[clamp(2.5rem,11.5vw,4rem)] sm:text-7xl md:text-[6.5rem] lg:text-[7.5rem] xl:text-[9rem] tracking-[-0.045em] font-black text-[#050505] leading-[0.83] uppercase">
               <div className="overflow-hidden inline-block w-full">
                 <motion.span
                   initial={{ y: "100%" }}

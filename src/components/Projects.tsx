@@ -90,7 +90,7 @@ export default function Projects({ lang: _lang = "en" }: ProjectsProps) {
       className="relative z-10 w-full bg-white border-t border-[#050505]/5"
     >
       <div ref={containerRef} className="relative h-[300vh]">
-        <div className="sticky top-0 h-screen overflow-hidden flex flex-col justify-center gap-6 py-12 md:py-16">
+        <div className="sticky top-0 min-h-screen overflow-visible flex flex-col justify-center gap-6 py-12 md:py-16 lg:h-screen lg:overflow-hidden">
           {header}
           <motion.div
             ref={trackRef}
