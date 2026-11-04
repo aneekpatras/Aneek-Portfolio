@@ -350,10 +350,9 @@ export const SKILL_ITEMS: SkillItem[] = [
 export const EXPERIENCE_TIMELINE: Experience[] = [
   {
     id: "exp-oz",
-    company: "Oz Tech Work",
+    company: "OzTechWork",
     role: "WordPress Developer",
     period: "Dec 2025 – Present",
-    employmentType: "Direct Contractor",
     highlights: [
       "Custom Theme & Core Web Vitals (45 → 85+ PageSpeed)",
       "PHP/MySQL Database & Performance Optimization",
@@ -364,10 +363,9 @@ export const EXPERIENCE_TIMELINE: Experience[] = [
   },
   {
     id: "exp-ebakey",
-    company: "Ebakey (Germany)",
-    role: "E-Commerce Developer & Intern",
-    period: "May 2025 – Jul 2025",
-    employmentType: "Part-Time Contractor",
+    company: "Ebakery",
+    role: "E-Commerce Intern",
+    period: "Jul 2025 – Dec 2025",
     highlights: [
       "Shopify & WordPress Store Operations",
       "Cross-Platform Product & Catalog Management",
@@ -377,10 +375,9 @@ export const EXPERIENCE_TIMELINE: Experience[] = [
   },
   {
     id: "exp-yahweh",
-    company: "Mixintech IT Company",
+    company: "Mixintech",
     role: "WordPress Developer",
-    period: "Sep 2024 – Jun 2025",
-    employmentType: "Direct Contractor",
+    period: "Apr 2024 – Jun 2025",
     highlights: [
       "WooCommerce & Payment Gateway Integrations",
       "Staging-Based Site Migrations (70% Downtime Reduction)",

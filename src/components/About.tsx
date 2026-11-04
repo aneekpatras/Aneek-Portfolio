@@ -24,10 +24,7 @@ export default function About({ lang }: AboutProps) {
   const t = TRANSLATIONS[lang];
 
   const stats = [
-    { value: "1.5+", label: lang === "ur" ? "سال کا تجربہ" : "Years Experience" },
-    { value: "20+", label: lang === "ur" ? "مکمل کردہ پروجیکٹس" : "Projects Delivered" },
-    { value: "99%", label: lang === "ur" ? "کور ویب وائٹلز پاس ریٹ" : "Core Web Vitals Pass Rate" },
-    { value: "100%", label: lang === "ur" ? "اعلیٰ کسٹمر اطمینان" : "Satisfaction Commitment" },
+    { value: "3+", label: lang === "ur" ? "سال کا تجربہ" : "Years Experience" },
   ];
 
   const highlights = [
@@ -193,7 +190,7 @@ export default function About({ lang }: AboutProps) {
             </h3>
 
             {/* Micro Stats Grid */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               {stats.map((stat, idx) => (
                 <motion.div
                   initial={{ opacity: 0, y: 15 }}

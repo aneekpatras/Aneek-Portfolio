@@ -17,7 +17,6 @@ export default function Experience({ lang, hideHeader = false }: ExperienceProps
       if (item.id === "exp-oz") {
         return {
           ...item,
-          company: "اوز گروپ",
           role: "ورڈپریس ڈویلپر",
           period: "دسمبر ۲۰۲۵ – تاحال",
           highlights: [
@@ -31,9 +30,7 @@ export default function Experience({ lang, hideHeader = false }: ExperienceProps
       } else if (item.id === "exp-yahweh") {
         return {
           ...item,
-          company: "یاہوے روئی آئی ٹی کمپنی",
           role: "ورڈپریس ڈویلپر",
-          period: "ستمبر ۲۰۲۴ – جون ۲۰۲۵",
           highlights: [
             "قبول ویب سائٹس کی تعمیر",
             "وو کامرس پروجیکٹس",
@@ -131,9 +128,11 @@ export default function Experience({ lang, hideHeader = false }: ExperienceProps
                   <span className="font-mono text-xs font-bold text-[#FF6B00] uppercase tracking-wider block">
                     {item.period}
                   </span>
-                  <p className="font-sans text-[10px] text-[#5F5F5F]/60 font-semibold tracking-wider uppercase mt-1">
-                    {lang === "ur" ? "براہِ راست نیٹ ورک" : (item.employmentType ?? "Direct Contractor")}
-                  </p>
+                  {item.employmentType && (
+                    <p className="font-sans text-[10px] text-[#5F5F5F]/60 font-semibold tracking-wider uppercase mt-1">
+                      {item.employmentType}
+                    </p>
+                  )}
                 </div>
 
                 {/* Main Content Card */}
