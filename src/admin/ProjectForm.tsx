@@ -1,7 +1,8 @@
-import { useEffect, useState, type FormEvent } from "react";
-import { X, Plus, Star } from "lucide-react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import { X, Plus, Star, Upload } from "lucide-react";
 import { Project } from "../types";
 import { emptyProject } from "../lib/projectStore";
+import { supabase } from "../lib/supabase";
 
 interface ProjectFormProps {
   /** Pass a project to edit, or null to create a new one. */
@@ -19,6 +20,10 @@ export default function ProjectForm({ initial, onSave, onClose }: ProjectFormPro
   const [form, setForm] = useState<Project>(() => initial ?? emptyProject());
   const [tagDraft, setTagDraft] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadingHoverImage, setUploadingHoverImage] = useState(false);
+  const imageInput = useRef<HTMLInputElement>(null);
+  const hoverImageInput = useRef<HTMLInputElement>(null);
 
   // Close on Escape.
   useEffect(() => {
@@ -31,6 +36,65 @@ export default function ProjectForm({ initial, onSave, onClose }: ProjectFormPro
 
   const set = <K extends keyof Project>(key: K, value: Project[K]) =>
     setForm((f) => ({ ...f, [key]: value }));
+
+  const uploadImage = async (file: File, field: "image" | "hoverImage") => {
+    const setUploading = field === "image" ? setUploadingImage : setUploadingHoverImage;
+    const input = field === "image" ? imageInput.current : hoverImageInput.current;
+    setUploading(true);
+    setError(null);
+
+    try {
+      if (!supabase) {
+        setError("Supabase is not configured.");
+        return;
+      }
+
+      const extensions: Record<string, string> = {
+        "image/png": "png",
+        "image/jpeg": "jpg",
+        "image/webp": "webp",
+      };
+      const ext = extensions[file.type];
+      if (!ext) {
+        setError("Choose a PNG, JPEG, or WebP image.");
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        setError("Image must be 5 MB or smaller.");
+        return;
+      }
+
+      const slug = form.title.toLowerCase().replace(/[^a-z0-9]+/g, "-") || "project";
+      const suffix = field === "hoverImage" ? "hover" : "thumb";
+      const path = `${slug}-${suffix}-${Date.now()}.${ext}`;
+      const { error: uploadError } = await supabase.storage
+        .from("project-images")
+        .upload(path, file, {
+          cacheControl: "31536000",
+          upsert: false,
+          contentType: file.type,
+        });
+
+      if (uploadError) {
+        setError(
+          /row-level security|401|403/i.test(uploadError.message)
+            ? "Please log in as admin to upload."
+            : uploadError.message
+        );
+        return;
+      }
+
+      const { data } = supabase.storage.from("project-images").getPublicUrl(path);
+      set(field, data.publicUrl);
+    } catch (uploadError) {
+      setError(
+        uploadError instanceof Error ? uploadError.message : "Image upload failed."
+      );
+    } finally {
+      if (input) input.value = "";
+      setUploading(false);
+    }
+  };
 
   const addTag = () => {
     const value = tagDraft.trim();
@@ -162,12 +226,33 @@ export default function ProjectForm({ initial, onSave, onClose }: ProjectFormPro
           {/* Media + links */}
           <div>
             <label className={labelBase}>Image / Thumbnail URL</label>
-            <input
-              className={inputBase}
-              value={form.image}
-              onChange={(e) => set("image", e.target.value)}
-              placeholder="https://…/image.jpg"
-            />
+            <div className="flex min-w-0 gap-2">
+              <input
+                className={`${inputBase} min-w-0 flex-1`}
+                value={form.image}
+                onChange={(e) => set("image", e.target.value)}
+                placeholder="https://…/image.jpg"
+              />
+              <input
+                ref={imageInput}
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) void uploadImage(file, "image");
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => imageInput.current?.click()}
+                disabled={uploadingImage}
+                className="flex shrink-0 items-center gap-1 rounded-xl border border-[#050505]/12 bg-white px-4 text-xs font-bold uppercase tracking-wider text-[#050505] transition-colors hover:border-[#FF6B00] hover:text-[#FF6B00]"
+              >
+                <Upload className="h-3.5 w-3.5" />
+                {uploadingImage ? "Uploading..." : "Upload"}
+              </button>
+            </div>
             {form.image && (
               <img
                 src={form.image}
@@ -181,12 +266,33 @@ export default function ProjectForm({ initial, onSave, onClose }: ProjectFormPro
 
           <div>
             <label className={labelBase}>Hover Image URL (shown on card hover)</label>
-            <input
-              className={inputBase}
-              value={form.hoverImage ?? ""}
-              onChange={(e) => set("hoverImage", e.target.value)}
-              placeholder="https://…/hover.jpg"
-            />
+            <div className="flex min-w-0 gap-2">
+              <input
+                className={`${inputBase} min-w-0 flex-1`}
+                value={form.hoverImage ?? ""}
+                onChange={(e) => set("hoverImage", e.target.value)}
+                placeholder="https://…/hover.jpg"
+              />
+              <input
+                ref={hoverImageInput}
+                type="file"
+                accept="image/png,image/jpeg,image/webp"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) void uploadImage(file, "hoverImage");
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => hoverImageInput.current?.click()}
+                disabled={uploadingHoverImage}
+                className="flex shrink-0 items-center gap-1 rounded-xl border border-[#050505]/12 bg-white px-4 text-xs font-bold uppercase tracking-wider text-[#050505] transition-colors hover:border-[#FF6B00] hover:text-[#FF6B00]"
+              >
+                <Upload className="h-3.5 w-3.5" />
+                {uploadingHoverImage ? "Uploading..." : "Upload"}
+              </button>
+            </div>
             {form.hoverImage && (
               <img
                 src={form.hoverImage}
@@ -351,6 +457,7 @@ export default function ProjectForm({ initial, onSave, onClose }: ProjectFormPro
           </button>
           <button
             type="submit"
+            disabled={uploadingImage || uploadingHoverImage}
             className="rounded-full bg-[#FF6B00] px-6 py-2.5 text-xs font-bold uppercase tracking-widest text-white transition-colors hover:bg-[#050505]"
           >
             {initial ? "Save Changes" : "Create Project"}
