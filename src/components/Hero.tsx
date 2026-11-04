@@ -140,9 +140,8 @@ export default function Hero({ lang }: HeroProps) {
             </Link>
 
             <a
-              href="https://drive.google.com/uc?export=download&id=18ULXzAJ9vG56x77O_YKEtuBwr_vXcpWf"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/Aneek_Patras_Resume.pdf"
+              download="Aneek Patras (CMS Developer).pdf"
               className="group bg-transparent px-6 py-4 text-xs font-bold uppercase tracking-widest text-[#5F5F5F] hover:text-[#050505] transition-all flex items-center gap-1.5"
             >
               <Download className="w-4 h-4" />
