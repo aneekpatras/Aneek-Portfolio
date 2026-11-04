@@ -1,4 +1,4 @@
-import { useRef, useState, type ChangeEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ChangeEvent, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import {
   Plus,
@@ -21,7 +21,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { Project } from "../types";
-import { useProjects, projectApi } from "../lib/projectStore";
+import { onProjectError, useProjects, projectApi } from "../lib/projectStore";
 import ProjectForm from "./ProjectForm";
 import ChatbotTraining from "./ChatbotTraining";
 
@@ -39,6 +39,8 @@ export default function AdminDashboard() {
   const [dragOverId, setDragOverId] = useState<string | null>(null);
   const [tab, setTab] = useState<AdminTab>("projects");
   const fileInput = useRef<HTMLInputElement>(null);
+
+  useEffect(() => onProjectError((message) => alert(message)), []);
 
   const filtered = query.trim()
     ? projects.filter((p) =>
@@ -103,7 +105,7 @@ export default function AdminDashboard() {
                 Projects Admin
               </h1>
               <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-[#5F5F5F]">
-                {projects.length} project{projects.length === 1 ? "" : "s"} · saved locally
+                {projects.length} project{projects.length === 1 ? "" : "s"} · saved online
               </p>
             </div>
           </div>
@@ -216,12 +218,12 @@ export default function AdminDashboard() {
             onClick={() => {
               if (
                 confirm(
-                  "Reset to the original code-defined projects? This discards all local changes."
+                  "Write the original code-defined projects to the database? Existing projects with the same id will be overwritten."
                 )
               )
                 projectApi.reset();
             }}
-            title="Reset to defaults"
+            title="Seed from code"
             className="flex h-10 w-10 items-center justify-center rounded-full border border-[#050505]/12 bg-white text-[#5F5F5F] transition-colors hover:border-red-400 hover:text-red-500"
           >
             <RotateCcw className="h-4 w-4" />

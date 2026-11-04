@@ -53,6 +53,7 @@ export default function ProjectForm({ initial, onSave, onClose }: ProjectFormPro
 
   return (
     <div
+      data-lenis-prevent
       className="fixed inset-0 z-[100000] flex items-start justify-center overflow-y-auto bg-[#050505]/70 p-4 backdrop-blur-sm md:p-8"
       onClick={onClose}
     >

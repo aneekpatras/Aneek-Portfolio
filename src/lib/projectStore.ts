@@ -1,62 +1,82 @@
 import { useSyncExternalStore } from "react";
 import { Project, PORTFOLIO_PROJECTS } from "../types";
-
-/**
- * LocalStorage-backed data layer for the Projects section.
- *
- * The portfolio's <Projects /> component and the Admin Dashboard both talk to
- * THIS module — never to the static PORTFOLIO_PROJECTS array directly. On first
- * run (empty storage) we seed from PORTFOLIO_PROJECTS so the site looks
- * identical until the admin makes a change. Every write persists to
- * LocalStorage and notifies React via useSyncExternalStore, so the live site
- * updates the instant you save in the dashboard (even in another browser tab).
- */
-
-const STORAGE_KEY = "aneek_portfolio_projects_v1";
+import { supabase } from "./supabase";
 
 function clone<T>(value: T): T {
   if (typeof structuredClone === "function") return structuredClone(value);
   return JSON.parse(JSON.stringify(value));
 }
 
-function readStorage(): Project[] | null {
+let cache: Project[] = clone(PORTFOLIO_PROJECTS);
+const listeners = new Set<() => void>();
+const errorListeners = new Set<(message: string) => void>();
+let firstSubscriberLoaded = false;
+let writeQueue: Promise<void> = Promise.resolve();
+
+function notifyListeners(): void {
+  listeners.forEach((listener) => listener());
+}
+
+export function onProjectError(listener: (message: string) => void): () => void {
+  errorListeners.add(listener);
+  return () => errorListeners.delete(listener);
+}
+
+function notifyError(message: string): void {
+  errorListeners.forEach((listener) => listener(message));
+}
+
+function errorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  if (typeof error === "object" && error !== null && "message" in error) {
+    const message = error.message;
+    if (typeof message === "string") return message;
+  }
+  return String(error);
+}
+
+async function loadRemote(): Promise<void> {
+  const client = supabase;
+  if (!client) return;
+
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? (parsed as Project[]) : null;
+    const { data, error } = await client
+      .from("site_projects")
+      .select("id, display_order, published, data")
+      .order("display_order", { ascending: true });
+
+    if (error || !data?.length) return;
+
+    const rows = data as Array<{
+      id: string;
+      display_order: number;
+      published: boolean;
+      data: Omit<Project, "id" | "status" | "displayOrder">;
+    }>;
+    const projects = rows.map((row) => ({
+      ...row.data,
+      id: row.id,
+      displayOrder: row.display_order,
+      status: row.published ? "published" as const : "draft" as const,
+    }));
+
+    if (JSON.stringify(cache) !== JSON.stringify(projects)) {
+      cache = projects;
+      notifyListeners();
+    }
   } catch {
-    return null;
+    // Keep the current cache if the remote read is unavailable.
   }
 }
 
-/** Current projects: from LocalStorage if present, otherwise a fresh copy of the seed. */
-function loadProjects(): Project[] {
-  const stored = readStorage();
-  return stored ?? clone(PORTFOLIO_PROJECTS);
-}
-
-/**
- * `cache` holds the single source of truth in memory. useSyncExternalStore
- * requires getSnapshot() to return a STABLE reference until data actually
- * changes — so we only ever reassign `cache` on a real mutation.
- */
-let cache: Project[] = loadProjects();
-const listeners = new Set<() => void>();
-
 function subscribe(callback: () => void): () => void {
   listeners.add(callback);
-  // Sync across browser tabs / windows.
-  const onStorage = (e: StorageEvent) => {
-    if (e.key === STORAGE_KEY) {
-      cache = loadProjects();
-      callback();
-    }
-  };
-  window.addEventListener("storage", onStorage);
+  if (!firstSubscriberLoaded) {
+    firstSubscriberLoaded = true;
+    void loadRemote();
+  }
   return () => {
     listeners.delete(callback);
-    window.removeEventListener("storage", onStorage);
   };
 }
 
@@ -64,20 +84,121 @@ function getSnapshot(): Project[] {
   return cache;
 }
 
-function persist(next: Project[]): void {
-  // Stamp displayOrder from array position so the sequence is explicit.
-  const ordered = next.map((p, i) => ({ ...p, displayOrder: i }));
-  cache = ordered;
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(ordered));
-  } catch (err) {
-    // Storage full / disabled — keep the in-memory copy so the UI still works.
-    console.error("Failed to persist projects to LocalStorage:", err);
-  }
-  listeners.forEach((l) => l());
+type WriteOperation =
+  | { type: "upsert"; ids: string[] }
+  | { type: "delete"; id: string }
+  | { type: "all" }
+  | { type: "replaceAll" };
+
+function toRow(project: Project, displayOrder: number) {
+  const { id, status, displayOrder: _displayOrder, ...data } = project;
+  return {
+    id,
+    display_order: displayOrder,
+    published: status !== "draft",
+    data,
+    updated_at: new Date().toISOString(),
+  };
 }
 
-/* ------------------------------- utilities ------------------------------- */
+async function requireAdminSession(): Promise<NonNullable<typeof supabase>> {
+  if (!supabase) throw new Error("Supabase is not configured.");
+  const { data, error } = await supabase.auth.getSession();
+  if (error) throw error;
+  if (!data.session) throw new Error("Sign in as an admin to save project changes.");
+  return supabase;
+}
+
+async function writeToRemote(
+  operation: WriteOperation,
+  projects: Project[]
+): Promise<void> {
+  const client = await requireAdminSession();
+  const ordered = projects.map((project, index) => ({
+    ...project,
+    displayOrder: index,
+  }));
+
+  if (operation.type === "delete") {
+    const { error } = await client
+      .from("site_projects")
+      .delete()
+      .eq("id", operation.id);
+    if (error) throw error;
+    return;
+  }
+
+  if (operation.type === "upsert") {
+    const rows = ordered
+      .filter((project) => operation.ids.includes(project.id))
+      .map((project) => toRow(project, project.displayOrder ?? 0));
+    const { error } = await client
+      .from("site_projects")
+      .upsert(rows, { onConflict: "id" });
+    if (error) throw error;
+    return;
+  }
+
+  if (operation.type === "replaceAll") {
+    const { data: existingRows, error: selectError } = await client
+      .from("site_projects")
+      .select("id");
+    if (selectError) throw selectError;
+
+    const currentIds = new Set(ordered.map((project) => project.id));
+    const removedIds = (existingRows ?? [])
+      .map((row) => row.id as string)
+      .filter((id) => !currentIds.has(id));
+
+    if (ordered.length) {
+      const { error } = await client
+        .from("site_projects")
+        .upsert(ordered.map((project, index) => toRow(project, index)), {
+          onConflict: "id",
+        });
+      if (error) throw error;
+    }
+
+    if (removedIds.length) {
+      const { error } = await client
+        .from("site_projects")
+        .delete()
+        .in("id", removedIds);
+      if (error) throw error;
+    }
+    return;
+  }
+
+  if (ordered.length) {
+    const { error } = await client
+      .from("site_projects")
+      .upsert(ordered.map((project, index) => toRow(project, index)), {
+        onConflict: "id",
+      });
+    if (error) throw error;
+  }
+}
+
+async function reloadAfterFailure(operation: string, error: unknown): Promise<void> {
+  cache = clone(PORTFOLIO_PROJECTS);
+  notifyListeners();
+  await loadRemote();
+  notifyError(`${operation}: ${errorMessage(error)}`);
+}
+
+function persist(next: Project[], operation: WriteOperation): void {
+  const ordered = next.map((project, index) => ({ ...project, displayOrder: index }));
+  cache = ordered;
+  notifyListeners();
+
+  writeQueue = writeQueue.then(async () => {
+    try {
+      await writeToRemote(operation, ordered);
+    } catch (error) {
+      await reloadAfterFailure("Failed to save projects", error);
+    }
+  });
+}
 
 function slugify(value: string): string {
   return value
@@ -90,7 +211,7 @@ function slugify(value: string): string {
 /** Generate a unique, human-readable id from a title. */
 export function newProjectId(title: string): string {
   const base = slugify(title) || "project";
-  const existing = new Set(cache.map((p) => p.id));
+  const existing = new Set(cache.map((project) => project.id));
   if (!existing.has(base)) return base;
   let n = 2;
   while (existing.has(`${base}-${n}`)) n++;
@@ -119,8 +240,6 @@ export function emptyProject(): Project {
   };
 }
 
-/* ------------------------------- public API ------------------------------ */
-
 export const projectApi = {
   /** Snapshot of the current list (a copy — safe to mutate). */
   getAll(): Project[] {
@@ -132,58 +251,77 @@ export const projectApi = {
       ...project,
       id: project.id || newProjectId(project.title),
     };
-    persist([...cache, withId]);
+    persist([...cache, withId], { type: "upsert", ids: [withId.id] });
   },
 
   update(id: string, patch: Partial<Project>): void {
-    persist(cache.map((p) => (p.id === id ? { ...p, ...patch, id } : p)));
+    persist(
+      cache.map((project) => (project.id === id ? { ...project, ...patch, id } : project)),
+      { type: "upsert", ids: [id] }
+    );
   },
 
   remove(id: string): void {
-    persist(cache.filter((p) => p.id !== id));
+    persist(cache.filter((project) => project.id !== id), { type: "delete", id });
   },
 
   /** Move a single project one slot up (-1) or down (+1). */
   move(id: string, direction: -1 | 1): void {
-    const index = cache.findIndex((p) => p.id === id);
+    const index = cache.findIndex((project) => project.id === id);
     if (index === -1) return;
     const target = index + direction;
     if (target < 0 || target >= cache.length) return;
     const next = [...cache];
     [next[index], next[target]] = [next[target], next[index]];
-    persist(next);
+    persist(next, { type: "all" });
   },
 
   /** Drag-and-drop: place `draggedId` at the position of `targetId`. */
   reorder(draggedId: string, targetId: string): void {
     if (draggedId === targetId) return;
-    const from = cache.findIndex((p) => p.id === draggedId);
-    const to = cache.findIndex((p) => p.id === targetId);
+    const from = cache.findIndex((project) => project.id === draggedId);
+    const to = cache.findIndex((project) => project.id === targetId);
     if (from === -1 || to === -1) return;
     const next = [...cache];
     const [moved] = next.splice(from, 1);
     next.splice(to, 0, moved);
-    persist(next);
+    persist(next, { type: "all" });
   },
 
   /** Replace the entire list (used by JSON import). */
   replaceAll(list: Project[]): void {
-    persist(list);
+    persist(list, { type: "replaceAll" });
   },
 
-  /** Wipe overrides and fall back to the code-defined seed data. */
+  /** Seed the database with the code-defined projects. */
   reset(): void {
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      /* ignore */
-    }
-    cache = clone(PORTFOLIO_PROJECTS);
-    listeners.forEach((l) => l());
+    writeQueue = writeQueue.then(async () => {
+      try {
+        const client = await requireAdminSession();
+        const { error } = await client
+          .from("site_projects")
+          .upsert(
+            PORTFOLIO_PROJECTS.map((project, index) => toRow(project, index)),
+            { onConflict: "id" }
+          );
+        if (error) throw error;
+        await loadRemote();
+      } catch (error) {
+        await reloadAfterFailure("Failed to seed projects from code", error);
+      }
+    });
   },
 };
 
-/** React hook — re-renders on any change, in this tab or another. */
+if (supabase) {
+  supabase.auth.onAuthStateChange(() => {
+    void loadRemote();
+  });
+}
+
+void loadRemote();
+
+/** React hook — re-renders on any change. */
 export function useProjects(): Project[] {
   return useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 }
