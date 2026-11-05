@@ -19,14 +19,16 @@ import {
   Eye,
   AlertTriangle,
   MessageSquare,
+  BookOpen,
 } from "lucide-react";
 import { Project } from "../types";
 import { onProjectError, useProjects, projectApi } from "../lib/projectStore";
 import ProjectForm from "./ProjectForm";
 import ChatbotTraining from "./ChatbotTraining";
+import KnowledgeAdmin from "./KnowledgeAdmin";
 
 type ViewMode = "grid" | "list";
-type AdminTab = "projects" | "chatbot";
+type AdminTab = "projects" | "chatbot" | "knowledge";
 
 export default function AdminDashboard() {
   const projects = useProjects();
@@ -150,10 +152,22 @@ export default function AdminDashboard() {
           >
             <MessageSquare className="h-3.5 w-3.5" /> Chatbot Training
           </button>
+          <button
+            onClick={() => setTab("knowledge")}
+            className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold uppercase tracking-widest transition-colors ${
+              tab === "knowledge"
+                ? "bg-[#050505] text-white"
+                : "border border-[#050505]/12 bg-white text-[#5F5F5F] hover:text-[#050505]"
+            }`}
+          >
+            <BookOpen className="h-3.5 w-3.5" /> Knowledge
+          </button>
         </div>
       </div>
 
-      {tab === "chatbot" ? (
+      {tab === "knowledge" ? (
+        <KnowledgeAdmin />
+      ) : tab === "chatbot" ? (
         <ChatbotTraining />
       ) : (
       <>
